@@ -6,13 +6,13 @@ using UnityEngine.Experimental.GlobalIllumination;
 
 public class CardScript : MonoBehaviour
 {
-    GameMaster master;
+    Player player;
     bool selected;
     public Light hoverLight;
 
     private void Start()
     {
-        master = GameObject.Find("GameMaster").GetComponent<GameMaster>();
+        player = GameObject.Find("Player").GetComponent<Player>();
         selected = false;
 
         hoverLight = transform.GetChild(0).gameObject.GetComponent<Light>();
@@ -28,8 +28,8 @@ public class CardScript : MonoBehaviour
         {
             //tell game master this was chosen
             selected = true;
-            master.selectingPosition = true;
-            master.selectedCard = gameObject.GetComponent<CardScript>();
+            player.selectingPosition = true;
+            player.piece = gameObject.GetComponent<CardScript>();
         }
     }
 

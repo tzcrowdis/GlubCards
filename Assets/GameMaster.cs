@@ -1,35 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameMaster : MonoBehaviour
 {
-    public bool selectingPosition;
-    public GameObject[] startGrid = new GameObject[5];
+    Player player;
 
-    public CardScript selectedCard;
-    Vector3 startPos;
-    
+    Button endTurnButton;
+
     void Start()
     {
-        selectingPosition = false;
+        player = GameObject.Find("Player").GetComponent<Player>();
+        player.yourTurn = true;
+
+        endTurnButton = GameObject.Find("EndTurnButton").GetComponent<Button>();
+        endTurnButton.onClick.AddListener(EndTurn);
     }
 
-    void Update()
+    void EndTurn()
     {
-        //move cards to selected starting position
-        if (selectingPosition)
-        {
-            for (int i = 0; i < startGrid.Length; i++)
-            {
-                if (startGrid[i].GetComponent<GridElemScript>().selected == true)
-                {
-                    startPos = startGrid[i].transform.position;
-                    startPos.z = (float)-0.75;
-                    selectedCard.hoverLight.enabled = false;
-                    StartCoroutine(selectedCard.MoveToStart(startPos));
-                }
-            }
-        }
+        player.yourTurn = false;
+
+        //wait for board state
+        //board = enemy.getMove(board);
+
+        //update board (move enemy pieces)
+
+        player.yourTurn = true;
     }
 }
