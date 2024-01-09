@@ -26,9 +26,8 @@ public class CardScript : MonoBehaviour
         
         if (Input.GetMouseButtonDown(0))
         {
-            //tell game master this was chosen
+            //tell player this was chosen
             selected = true;
-            player.selectingPosition = true;
             player.piece = gameObject.GetComponent<CardScript>();
         }
     }

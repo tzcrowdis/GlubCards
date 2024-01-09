@@ -8,47 +8,51 @@ public class Player : MonoBehaviour
 
     public GameObject[] startGrid = new GameObject[5];
 
-    public bool selectingPosition;
     public bool selectingPiece;
-    
+    bool pullPiece;
 
     public CardScript piece;
     Vector3 startPos;
 
     void Start()
     {
-        selectingPosition = false;
         selectingPiece = false;
+        pullPiece = true;
     }
 
     void Update()
     {
         if (yourTurn)
         {
-            if (!selectingPiece) { selectingPiece = true; }
-
-            if (selectingPiece)
+            if (pullPiece)
             {
                 //pull piece from bag
 
+                selectingPiece = true;
+
                 //turn on hover effect for pieces in hand
 
-                if (piece != null)
-                {
-                    //move cards to selected starting position
-                    if (selectingPosition)
-                    {
-                        //turn on hover effect for grid
+                //set pullPiece to false
+            }
 
-                        for (int i = 0; i < startGrid.Length; i++)
+            if (selectingPiece)
+            {
+                if (piece != null) //selecting position
+                {
+                    //turn on hover effect for grid
+
+                    //move cards to selected starting position
+                    for (int i = 0; i < startGrid.Length; i++)
+                    {
+                        if (startGrid[i].GetComponent<GridElemScript>().selected == true)
                         {
-                            if (startGrid[i].GetComponent<GridElemScript>().selected == true)
-                            {
-                                startPos = startGrid[i].transform.position;
-                                startPos.z = (float)-0.75;
-                                piece.hoverLight.enabled = false;
-                                StartCoroutine(piece.MoveToStart(startPos));
-                            }
+                            startPos = startGrid[i].transform.position;
+                            startPos.z = (float)-0.75;
+                            piece.hoverLight.enabled = false;
+                            StartCoroutine(piece.MoveToStart(startPos));
+
+                            //clean up variables here?
+                            //maybe have master do it?
                         }
                     }
                 }
