@@ -7,6 +7,7 @@ public class GridElemScript : MonoBehaviour
     ParticleSystem hoverEffect;
     
     public bool selected;
+    public bool on;
     
     void Start()
     {
@@ -16,17 +17,21 @@ public class GridElemScript : MonoBehaviour
         emission.enabled = false;
 
         selected = false;
+        on = false;
     }
 
     void OnMouseOver()
     {
-        //enable particles
-        var emission = hoverEffect.emission;
-        emission.enabled = true;
-
-        if (Input.GetMouseButtonDown(0))
+        if (on)
         {
-            selected = true;
+            //enable particles
+            var emission = hoverEffect.emission;
+            emission.enabled = true;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                selected = true;
+            }
         }
     }
 

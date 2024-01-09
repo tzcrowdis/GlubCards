@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public bool yourTurn; //set by game master [ADD SETTER?]
+    bool yourTurn; //set by game master
 
     public GameObject[] startGrid = new GameObject[5];
 
     public bool selectingPiece;
+
     bool pullPiece;
+    BagOfPieces bag;
 
     public CardScript piece;
     Vector3 startPos;
@@ -18,6 +20,8 @@ public class Player : MonoBehaviour
     {
         selectingPiece = false;
         pullPiece = true;
+
+        bag = GameObject.Find("BagOfPieces").GetComponent<BagOfPieces>();
     }
 
     void Update()
@@ -27,19 +31,20 @@ public class Player : MonoBehaviour
             if (pullPiece)
             {
                 //pull piece from bag
+                bag.pulling = true;
 
-                selectingPiece = true;
+                //need to wait for piece
 
-                //turn on hover effect for pieces in hand
-
-                //set pullPiece to false
+                //turn on piece selection
+                TurnOnPieceSelection();
+                pullPiece = false;
             }
 
             if (selectingPiece)
             {
                 if (piece != null) //selecting position
                 {
-                    //turn on hover effect for grid
+                    TurnOnGridSelection();
 
                     //move cards to selected starting position
                     for (int i = 0; i < startGrid.Length; i++)
@@ -51,12 +56,54 @@ public class Player : MonoBehaviour
                             piece.hoverLight.enabled = false;
                             StartCoroutine(piece.MoveToStart(startPos));
 
-                            //clean up variables here?
-                            //maybe have master do it?
+                            TurnOffGridSelection();
                         }
                     }
                 }
             }
+        }
+    }
+
+    public void StartTurn()
+    {
+        yourTurn = true;
+        selectingPiece = false;
+        pullPiece = true;
+        //more setup here
+    }
+
+    public void EndTurn()
+    {
+        yourTurn = false;
+        TurnOffPieceSelection();
+        //more cleanup here
+    }
+
+    void TurnOnPieceSelection()
+    {
+        //find all pieces to turn on
+        selectingPiece = true;
+    }
+
+    void TurnOffPieceSelection()
+    {
+        //find all pieces to turn off
+        selectingPiece = false;
+    }
+
+    void TurnOnGridSelection()
+    {
+        for (int i = 0; i < startGrid.Length; i++)
+        {
+            startGrid[i].GetComponent<GridElemScript>().on = true;
+        }
+    }
+
+    void TurnOffGridSelection()
+    {
+        for (int i = 0; i < startGrid.Length; i++)
+        {
+            startGrid[i].GetComponent<GridElemScript>().on = false;
         }
     }
 }

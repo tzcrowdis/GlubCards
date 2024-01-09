@@ -9,24 +9,32 @@ public class GameMaster : MonoBehaviour
 
     Button endTurnButton;
 
+    string[] board; //grid that stores names of game objects
+
+    Enemy enemy; 
+
     void Start()
     {
         player = GameObject.Find("Player").GetComponent<Player>();
-        player.yourTurn = true;
+        player.StartTurn();
 
         endTurnButton = GameObject.Find("EndTurnButton").GetComponent<Button>();
         endTurnButton.onClick.AddListener(EndTurn);
+
+        enemy = GameObject.Find("Enemy").GetComponent<Enemy>();
+
+        //init board
     }
 
     void EndTurn()
     {
-        player.yourTurn = false;
+        player.EndTurn();
 
         //wait for board state
-        //board = enemy.getMove(board);
+        board = enemy.getPlacements(board);
 
         //update board (move enemy pieces)
 
-        player.yourTurn = true;
+        player.StartTurn();
     }
 }

@@ -40,7 +40,7 @@ public class CardScript : MonoBehaviour
         }
     }
 
-    public IEnumerator MoveToStart(Vector3 startPos) 
+    public IEnumerator MoveToStart(Vector3 startPos)
     {
         //move to the position and rotate to (90, 0, 0)
         Vector3 currentPos = transform.position;
