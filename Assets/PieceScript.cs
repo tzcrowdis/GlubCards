@@ -4,10 +4,14 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 
-public class CardScript : MonoBehaviour
+public class PieceScript : MonoBehaviour
 {
     Player player;
+
     bool selected;
+
+    bool inPlay;
+
     public Light hoverLight;
 
     private void Start()
@@ -17,18 +21,24 @@ public class CardScript : MonoBehaviour
 
         hoverLight = transform.GetChild(0).gameObject.GetComponent<Light>();
         hoverLight.enabled = false;
+
+        inPlay = false;
     }
 
     private void OnMouseOver()
     {
-        //highlight card
-        hoverLight.enabled = true;
-        
-        if (Input.GetMouseButtonDown(0))
+        if (player.selectingPiece && !inPlay)
         {
-            //tell player this was chosen
-            selected = true;
-            player.piece = gameObject.GetComponent<CardScript>();
+            //highlight card
+            hoverLight.enabled = true;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                //tell player this was chosen
+                selected = true;
+                player.piece = gameObject.GetComponent<PieceScript>();
+                inPlay = true;
+            }
         }
     }
 
@@ -42,10 +52,13 @@ public class CardScript : MonoBehaviour
 
     public IEnumerator MoveToStart(Vector3 startPos)
     {
-        //move to the position and rotate to (90, 0, 0)
+        //set y direction based on piece height
+        startPos.y = 0.5f;
+        
+        //move to the position and rotate to face enemy
         Vector3 currentPos = transform.position;
         Quaternion currentRot = transform.rotation;
-        Quaternion startRot = Quaternion.Euler(90, 0, 0);
+        Quaternion startRot = Quaternion.Euler(0, 0, 0);
         float t = 0;
         float endTime = 1;
 

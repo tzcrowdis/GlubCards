@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class BagOfPieces : MonoBehaviour
 {
-    GameObject[] pieces;
+    string[] pieces;
+    GameObject chosenPiece;
 
     public bool pulling;
 
@@ -15,6 +16,9 @@ public class BagOfPieces : MonoBehaviour
 
     private void Start()
     {
+        //load pieces player has from file containing names
+        //naming convention for upgrades?
+        
         pulling = false;
         grow = false;
 
@@ -30,24 +34,16 @@ public class BagOfPieces : MonoBehaviour
         if (grow)
         {
             if (transform.localScale.x < endSize.x) 
-            {
                 transform.localScale += scaleChange;
-            }
             else
-            {
                 transform.localScale = endSize;
-            }
         }
         else
         {
             if (transform.localScale.x > startSize.x)
-            {
                 transform.localScale -= scaleChange;
-            }
             else
-            {
                 transform.localScale = startSize;
-            }
         }
     }
 
@@ -61,8 +57,12 @@ public class BagOfPieces : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 //pull a random piece
+                chosenPiece = Resources.Load("Pieces/PawnTemp") as GameObject;
+
                 //remove it from pieces
-                //add it to player hand (script and in game)
+
+                //add it to game
+                Instantiate(chosenPiece, new Vector3(3f, 0.25f, -1f), Quaternion.identity);
                 pulling = false;
                 grow = false;
             }

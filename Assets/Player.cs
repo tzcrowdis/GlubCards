@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     bool pullPiece;
     BagOfPieces bag;
 
-    public CardScript piece;
+    public PieceScript piece;
     Vector3 startPos;
 
     void Start()
@@ -52,7 +52,6 @@ public class Player : MonoBehaviour
                         if (startGrid[i].GetComponent<GridElemScript>().selected == true)
                         {
                             startPos = startGrid[i].transform.position;
-                            startPos.z = (float)-0.75;
                             piece.hoverLight.enabled = false;
                             StartCoroutine(piece.MoveToStart(startPos));
 
@@ -82,12 +81,14 @@ public class Player : MonoBehaviour
     void TurnOnPieceSelection()
     {
         //find all pieces to turn on
+
         selectingPiece = true;
     }
 
     void TurnOffPieceSelection()
     {
         //find all pieces to turn off
+
         selectingPiece = false;
     }
 
@@ -104,6 +105,7 @@ public class Player : MonoBehaviour
         for (int i = 0; i < startGrid.Length; i++)
         {
             startGrid[i].GetComponent<GridElemScript>().on = false;
+            startGrid[i].GetComponent<GridElemScript>().selected = false;
         }
     }
 }
