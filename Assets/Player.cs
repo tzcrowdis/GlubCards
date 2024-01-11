@@ -33,8 +33,6 @@ public class Player : MonoBehaviour
                 //pull piece from bag
                 bag.pulling = true;
 
-                //need to wait for piece
-
                 //turn on piece selection
                 TurnOnPieceSelection();
                 pullPiece = false;
@@ -56,6 +54,7 @@ public class Player : MonoBehaviour
                             StartCoroutine(piece.MoveToStart(startPos));
 
                             TurnOffGridSelection();
+                            TurnOffPieceSelection();
                         }
                     }
                 }

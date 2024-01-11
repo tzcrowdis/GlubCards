@@ -1,10 +1,13 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class BagOfPieces : MonoBehaviour
 {
-    string[] pieces;
+    List<string> pieces = new List<string>();
     GameObject chosenPiece;
 
     public bool pulling;
@@ -18,6 +21,7 @@ public class BagOfPieces : MonoBehaviour
     {
         //load pieces player has from file containing names
         //naming convention for upgrades?
+        ReadPlayerPieces();
         
         pulling = false;
         grow = false;
@@ -29,7 +33,6 @@ public class BagOfPieces : MonoBehaviour
 
     private void Update()
     {
-        
         //hover effect during turn sequence
         if (grow)
         {
@@ -56,13 +59,24 @@ public class BagOfPieces : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                //pull a random piece
-                chosenPiece = Resources.Load("Pieces/PawnTemp") as GameObject;
+                if (pieces.Count > 0)
+                {
+                    //pull a random piece
+                    int randPiece = UnityEngine.Random.Range(0, pieces.Count);
+                    string pieceName = pieces[randPiece];
+                    chosenPiece = Resources.Load("Pieces/" + pieceName) as GameObject;
 
-                //remove it from pieces
+                    //remove it from pieces [commented out for testing]
+                    //pieces.Remove(pieceName);
 
-                //add it to game
-                Instantiate(chosenPiece, new Vector3(3f, 0.25f, -1f), Quaternion.identity);
+                    //add it to game
+                    Instantiate(chosenPiece, new Vector3(3f, 0.25f, -1f), Quaternion.identity);
+                }
+                else
+                {
+                    Debug.Log("Out of pieces.");
+                }
+
                 pulling = false;
                 grow = false;
             }
@@ -73,5 +87,25 @@ public class BagOfPieces : MonoBehaviour
     {
         //disable hover effect
         grow = false;
+    }
+
+    void ReadPlayerPieces()
+    {
+        try
+        {
+            using (StreamReader sr = new StreamReader("Assets/PlayerPieces.txt"))
+            {
+                string name;
+                while ((name = sr.ReadLine()) != null)
+                {
+                    pieces.Add(name);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Player Piece file could not be read:");
+            Debug.Log(e.Message);
+        }
     }
 }
