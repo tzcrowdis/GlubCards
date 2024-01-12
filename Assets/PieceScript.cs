@@ -4,7 +4,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 
-public class PieceScript : MonoBehaviour
+public class PieceScript : MonoBehaviour //handles administrative generic piece tasks
 {
     Player player;
 
@@ -13,6 +13,9 @@ public class PieceScript : MonoBehaviour
     bool inPlay;
 
     public Light hoverLight;
+
+    GameMaster master;
+    bool updatedMaster;
 
     private void Start()
     {
@@ -23,6 +26,9 @@ public class PieceScript : MonoBehaviour
         hoverLight.enabled = false;
 
         inPlay = false;
+
+        master = GameObject.Find("GameMaster").GetComponent<GameMaster>();
+        updatedMaster = false;
     }
 
     private void OnMouseOver()
@@ -52,6 +58,12 @@ public class PieceScript : MonoBehaviour
 
     public IEnumerator MoveToStart(Vector3 startPos)
     {
+        if (!updatedMaster)
+        {
+            UpdateBoardPosition(startPos);
+            updatedMaster = true;
+        }
+
         //set y direction based on piece height
         startPos.y = 0.5f;
         
@@ -72,6 +84,13 @@ public class PieceScript : MonoBehaviour
 
         transform.position = startPos;
         transform.rotation = startRot;
+        updatedMaster = false;
         yield return null;
+    }
+
+    void UpdateBoardPosition(Vector3 pos)
+    {
+        //tell game master pieces position on board
+        master.AddPlayerPieceToBoard(gameObject, pos);
     }
 }

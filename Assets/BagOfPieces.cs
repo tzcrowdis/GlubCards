@@ -20,7 +20,6 @@ public class BagOfPieces : MonoBehaviour
     private void Start()
     {
         //load pieces player has from file containing names
-        //naming convention for upgrades?
         ReadPlayerPieces();
         
         pulling = false;
@@ -70,7 +69,7 @@ public class BagOfPieces : MonoBehaviour
                     //pieces.Remove(pieceName);
 
                     //add it to game
-                    Instantiate(chosenPiece, new Vector3(3f, 0.25f, -1f), Quaternion.identity);
+                    Instantiate(chosenPiece, new Vector3(3f, 0.25f, -1f), Quaternion.identity); //NEED A METHOD TO HANDLE THIS
                 }
                 else
                 {

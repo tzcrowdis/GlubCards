@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
         turnText.alpha = 0f;
     }
 
-    public string[] getPlacements(string[] board)
+    public GameObject[,] getPlacements(GameObject[,] board)
     {
         //fill in AI to choose piece placements based on board state
 
