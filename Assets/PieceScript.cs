@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.Scripting.APIUpdating;
 
-public class PieceScript : MonoBehaviour //handles administrative generic piece tasks
+public abstract class PieceScript : MonoBehaviour //handles administrative generic piece tasks
 {
     Player player;
 
@@ -15,11 +16,9 @@ public class PieceScript : MonoBehaviour //handles administrative generic piece 
     public Light hoverLight;
 
     //GameMaster master;
-    bool updatedMaster;
+    public bool updatedMaster {get; private set;}
 
-    
-
-    private void Start()
+    public virtual void Start()
     {
         player = GameObject.Find("Player").GetComponent<Player>();
         selected = false;
@@ -31,6 +30,36 @@ public class PieceScript : MonoBehaviour //handles administrative generic piece 
 
         //master = GameObject.Find("GameMaster").GetComponent<GameMaster>();
         updatedMaster = false;
+    }
+
+    public virtual void Move()
+    {
+
+    }
+
+    protected IEnumerator MoveToPosition(Vector3 pos) 
+    {
+        pos.y = 0.5f;
+
+        //move to the position
+        Vector3 currentPos = transform.position;
+        Quaternion currentRot = transform.rotation;
+        Quaternion startRot = Quaternion.Euler(0, 0, 0);
+        float t = 0;
+        float endTime = 1;
+
+        while (t < endTime)
+        {
+            transform.position = Vector3.Lerp(currentPos, pos, t);
+            transform.rotation = Quaternion.Lerp(currentRot, startRot, t);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = pos;
+        transform.rotation = startRot;
+        updatedMaster = false;
+        yield return null;
     }
 
     private void OnMouseOver()
@@ -95,4 +124,5 @@ public class PieceScript : MonoBehaviour //handles administrative generic piece 
         //tell game master pieces position on board
         GameMaster.Instance.AddPlayerPieceToBoard(gameObject, pos);
     }
+
 }

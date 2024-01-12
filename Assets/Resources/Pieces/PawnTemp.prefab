@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 1207645379415520876}
   - component: {fileID: 6885452798565949198}
   - component: {fileID: 8333736153563738030}
-  - component: {fileID: 254550535457141069}
+  - component: {fileID: 3995153200407203753}
   m_Layer: 0
   m_Name: PawnTemp
   m_TagString: Untagged
@@ -203,7 +203,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &254550535457141069
+--- !u!114 &3995153200407203753
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -212,7 +212,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5908599947001188257}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7002e7deccaa9814286a8151b8c1801b, type: 3}
+  m_Script: {fileID: 11500000, guid: 931b959f396941d4b9a3de5314ff52ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hoverLight: {fileID: 0}

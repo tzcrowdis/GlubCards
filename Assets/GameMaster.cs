@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +19,8 @@ public class GameMaster : MonoBehaviour
     Button endTurnButton;
 
     GameObject[,] board; //grid that stores game objects [should it just be names?]
+
+    static List<PieceScript> activePieceScripts = new List<PieceScript>();
 
     public static GameMaster Instance { get; private set; } //good for one instance
 
@@ -76,6 +80,12 @@ public class GameMaster : MonoBehaviour
                 }
             }
         }
+        //test move piece, in reality this should be called once per turn
+        foreach(PieceScript allPieces in activePieceScripts) 
+        {
+            if (!allPieces.updatedMaster)
+                allPieces.Move();
+        }
     }
 
     void EndTurn()
@@ -87,5 +97,18 @@ public class GameMaster : MonoBehaviour
     public void AddPlayerPieceToBoard(GameObject piece, Vector3 coord)
     {
         board[(int)coord.x - 1, (int)coord.z - 1] = piece;
+        //keep track of all active piece scripts
+        activePieceScripts.Add(piece.GetComponent<PieceScript>());
+        Debug.Log($"Added piece script {activePieceScripts.Last()} to board");
     }
+
+    public int[] GetPieceLocation(GameObject piece) {
+        //this might be risky but works in theory
+        return new int[] {(int)piece.transform.position.x - 1, (int)piece.transform.position.y - 1};
+    }
+
+    public Vector3 GetBoardPosition(int[] coords) {
+        return board[coords[0], coords[1]].transform.position;
+    }
+
 }
