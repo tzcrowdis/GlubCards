@@ -14,8 +14,10 @@ public class PieceScript : MonoBehaviour //handles administrative generic piece 
 
     public Light hoverLight;
 
-    GameMaster master;
+    //GameMaster master;
     bool updatedMaster;
+
+    
 
     private void Start()
     {
@@ -27,7 +29,7 @@ public class PieceScript : MonoBehaviour //handles administrative generic piece 
 
         inPlay = false;
 
-        master = GameObject.Find("GameMaster").GetComponent<GameMaster>();
+        //master = GameObject.Find("GameMaster").GetComponent<GameMaster>();
         updatedMaster = false;
     }
 
@@ -91,6 +93,6 @@ public class PieceScript : MonoBehaviour //handles administrative generic piece 
     void UpdateBoardPosition(Vector3 pos)
     {
         //tell game master pieces position on board
-        master.AddPlayerPieceToBoard(gameObject, pos);
+        GameMaster.Instance.AddPlayerPieceToBoard(gameObject, pos);
     }
 }

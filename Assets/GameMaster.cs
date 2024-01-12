@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,8 +18,15 @@ public class GameMaster : MonoBehaviour
 
     GameObject[,] board; //grid that stores game objects [should it just be names?]
 
+    public static GameMaster Instance { get; private set; } //good for one instance
+
     void Start()
     {
+        if (Instance == null)
+            Instance = this;
+        else
+            UnityEngine.Object.Destroy(Instance.gameObject);
+
         player = GameObject.Find("Player").GetComponent<Player>();
         player.StartTurn();
         playerDone = false;
