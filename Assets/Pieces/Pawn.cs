@@ -7,7 +7,8 @@ using UnityEngine;
 
 public class Pawn : PieceScript
 {
-    public override void Start() {
+    public override void Start() 
+    {
         //set any unique variables here
         Debug.Log($"Child script is {GetType()}");
         Debug.Log($"Parent script is {GetType().BaseType}");
@@ -15,12 +16,10 @@ public class Pawn : PieceScript
         base.Start();
     }
 
-    public override void Move() {
+    public override void Move() 
+    {
         //Unique logic to move would go here for every piece
-        int[] newloc = GameMaster.Instance.GetPieceLocation(gameObject);
-        newloc[1]++;
-
-        StartCoroutine(MoveToPosition(GameMaster.Instance.GetBoardPosition(newloc)));
+        StartCoroutine(MoveToPosition(new Vector3(transform.position.x,0.5f,transform.position.z + 1f)));
     }
     
 }

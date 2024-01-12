@@ -53,6 +53,12 @@ public class GameMaster : MonoBehaviour
         if (playerDone) //put in update to wait for piece coroutines/animations
         {
             //move players pieces
+
+            foreach(PieceScript allPieces in activePieceScripts) 
+            {
+                if (!allPieces.updatedMaster)
+                    allPieces.Move();
+            }
             //find all player pieces
             //link their movement coroutines
             //start the coroutine of all linked pieces
@@ -80,12 +86,7 @@ public class GameMaster : MonoBehaviour
                 }
             }
         }
-        //test move piece, in reality this should be called once per turn
-        foreach(PieceScript allPieces in activePieceScripts) 
-        {
-            if (!allPieces.updatedMaster)
-                allPieces.Move();
-        }
+
     }
 
     void EndTurn()
@@ -94,21 +95,20 @@ public class GameMaster : MonoBehaviour
         playerDone = true;
     }
 
-    public void AddPlayerPieceToBoard(GameObject piece, Vector3 coord)
+    public void SetPieceLocOnBoard(GameObject piece, Vector3 coord)
     {
         board[(int)coord.x - 1, (int)coord.z - 1] = piece;
-        //keep track of all active piece scripts
-        activePieceScripts.Add(piece.GetComponent<PieceScript>());
+    }
+
+    public void InitializePiece(PieceScript piece)
+    {
+        activePieceScripts.Add(piece);
         Debug.Log($"Added piece script {activePieceScripts.Last()} to board");
     }
 
-    public int[] GetPieceLocation(GameObject piece) {
-        //this might be risky but works in theory
-        return new int[] {(int)piece.transform.position.x - 1, (int)piece.transform.position.y - 1};
-    }
-
-    public Vector3 GetBoardPosition(int[] coords) {
-        return board[coords[0], coords[1]].transform.position;
+    public int[] GetPieceLocation(GameObject piece) 
+    {
+        return new int[] {(int)piece.transform.position.x, (int)piece.transform.position.y};
     }
 
 }

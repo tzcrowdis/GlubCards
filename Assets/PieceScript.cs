@@ -13,6 +13,8 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     bool inPlay;
 
+    bool isMoving;
+
     public Light hoverLight;
 
     //GameMaster master;
@@ -30,6 +32,8 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
         //master = GameObject.Find("GameMaster").GetComponent<GameMaster>();
         updatedMaster = false;
+
+        isMoving = false;
     }
 
     public virtual void Move()
@@ -39,6 +43,13 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     protected IEnumerator MoveToPosition(Vector3 pos) 
     {
+
+        if (!updatedMaster)
+        {
+            UpdateBoardPosition(pos);
+            updatedMaster = true;
+        }
+
         pos.y = 0.5f;
 
         //move to the position
@@ -74,6 +85,9 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
                 //tell player this was chosen
                 selected = true;
                 player.piece = gameObject.GetComponent<PieceScript>();
+
+                //Initialize the piece on the board
+                GameMaster.Instance.InitializePiece(this);
                 inPlay = true;
             }
         }
@@ -122,7 +136,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
     void UpdateBoardPosition(Vector3 pos)
     {
         //tell game master pieces position on board
-        GameMaster.Instance.AddPlayerPieceToBoard(gameObject, pos);
+        GameMaster.Instance.SetPieceLocOnBoard(gameObject, pos);
     }
 
 }
