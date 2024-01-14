@@ -1,0 +1,4 @@
+Boss1=true
+Boss2=false
+Boss3=false
+Boss4=false

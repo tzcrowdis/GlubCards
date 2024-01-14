@@ -92,7 +92,7 @@ public class BagOfPieces : MonoBehaviour
     {
         try
         {
-            using (StreamReader sr = new StreamReader("Assets/PlayerPieces.txt"))
+            using (StreamReader sr = new StreamReader("Assets/GameFiles/PlayerPieces.txt"))
             {
                 string name;
                 while ((name = sr.ReadLine()) != null)
