@@ -60,6 +60,15 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.S))
+            CameraScript.Instance.ChangeCameraView(CameraScript.Views.Board_View);
+
+        if (Input.GetKeyDown(KeyCode.W))
+            CameraScript.Instance.ChangeCameraView(CameraScript.Views.Top_View);
+
+        if (Input.GetKeyDown(KeyCode.D))
+            CameraScript.Instance.ChangeCameraView(CameraScript.Views.Bag_View);
     }
 
     public void StartTurn()
