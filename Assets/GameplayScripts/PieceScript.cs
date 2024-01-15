@@ -13,11 +13,10 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     bool inPlay;
 
-    bool isMoving;
-
     public Light hoverLight;
 
-    //GameMaster master;
+    public bool moving;
+
     public bool updatedMaster {get; private set;}
 
     public virtual void Start()
@@ -30,17 +29,18 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
         inPlay = false;
 
-        //master = GameObject.Find("GameMaster").GetComponent<GameMaster>();
         updatedMaster = false;
 
-        isMoving = false;
+        moving = false;
     }
 
-    public virtual void Move()
+    public virtual IEnumerator Move()
     {
-
+        yield return null;
     }
 
+    /*
+    TESTING IF THIS IS UNNECESSARY
     protected IEnumerator MoveToPosition(Vector3 pos) 
     {
 
@@ -72,6 +72,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         updatedMaster = false;
         yield return null;
     }
+    */
 
     private void OnMouseOver()
     {

@@ -21,6 +21,7 @@ public class GameMaster : MonoBehaviour
     GameObject[,] board; //grid that stores game objects [should it just be names?]
 
     static List<PieceScript> activePieceScripts = new List<PieceScript>();
+    public int psInd;
 
     public static GameMaster Instance { get; private set; } //good for one instance
 
@@ -44,25 +45,25 @@ public class GameMaster : MonoBehaviour
         playerPiecesMoved = false;
         enemyPiecesMoved = false;
 
-        //init board
-        board = new GameObject[5, 5];
+        board = new GameObject[5, 5]; //would need board init function if we incorporate environmental tiles
+
+        psInd = 0;
     }
 
     void Update()
     {
         if (playerDone) //put in update to wait for piece coroutines/animations
         {
-            //move players pieces
-
-            foreach(PieceScript allPieces in activePieceScripts) 
+            //move all players pieces
+            if (psInd < activePieceScripts.Count)
             {
-                if (!allPieces.updatedMaster)
-                    allPieces.Move();
+                if (!activePieceScripts[psInd].moving)
+                    StartCoroutine(activePieceScripts[psInd].Move());
             }
-            //find all player pieces
-            //link their movement coroutines
-            //start the coroutine of all linked pieces
-            //set piecesMoved to true when completed
+            else
+            {
+                playerPiecesMoved = true;
+            }
 
             if (playerPiecesMoved)
             {
@@ -73,7 +74,7 @@ public class GameMaster : MonoBehaviour
                     enemyDone = true;
                 }
                 
-                //move enemy pieces
+                //move all enemy pieces
                 //set enemy pieces moved to true when completed
 
                 if (enemyPiecesMoved)
@@ -83,6 +84,7 @@ public class GameMaster : MonoBehaviour
                     enemyDone = false;
                     playerPiecesMoved = false;
                     enemyPiecesMoved = false;
+                    psInd = 0;
                 }
             }
         }
