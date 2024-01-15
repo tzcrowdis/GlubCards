@@ -17,6 +17,8 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     public bool moving;
 
+    public bool enemyPiece; //will need some way to set this when loading specific enemy
+
     public bool updatedMaster {get; private set;}
 
     public virtual void Start()
@@ -38,41 +40,6 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
     {
         yield return null;
     }
-
-    /*
-    TESTING IF THIS IS UNNECESSARY
-    protected IEnumerator MoveToPosition(Vector3 pos) 
-    {
-
-        if (!updatedMaster)
-        {
-            UpdateBoardPosition(pos);
-            updatedMaster = true;
-        }
-
-        pos.y = 0.5f;
-
-        //move to the position
-        Vector3 currentPos = transform.position;
-        Quaternion currentRot = transform.rotation;
-        Quaternion startRot = Quaternion.Euler(0, 0, 0);
-        float t = 0;
-        float endTime = 1;
-
-        while (t < endTime)
-        {
-            transform.position = Vector3.Lerp(currentPos, pos, t);
-            transform.rotation = Quaternion.Lerp(currentRot, startRot, t);
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = pos;
-        transform.rotation = startRot;
-        updatedMaster = false;
-        yield return null;
-    }
-    */
 
     private void OnMouseOver()
     {

@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
     void TurnOffPieceSelection()
     {
         //find all pieces to turn off
-
+        piece = null;
         selectingPiece = false;
     }
 

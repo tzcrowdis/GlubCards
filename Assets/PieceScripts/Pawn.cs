@@ -50,7 +50,10 @@ public class Pawn : PieceScript
         transform.rotation = nextRot;
 
         moving = false;
-        GameMaster.Instance.psInd++;
+        if (enemyPiece)
+            GameMaster.Instance.eInd++;
+        else
+            GameMaster.Instance.pInd++;
         yield return null;
     }
 }

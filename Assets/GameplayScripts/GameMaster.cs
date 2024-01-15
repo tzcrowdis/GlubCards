@@ -20,8 +20,10 @@ public class GameMaster : MonoBehaviour
 
     GameObject[,] board; //grid that stores game objects [should it just be names?]
 
-    static List<PieceScript> activePieceScripts = new List<PieceScript>();
-    public int psInd;
+    static List<PieceScript> activePlayerPieces = new List<PieceScript>();
+    static List<PieceScript> activeEnemyPieces = new List<PieceScript>();
+    public int pInd;
+    public int eInd;
 
     public static GameMaster Instance { get; private set; } //good for one instance
 
@@ -47,18 +49,19 @@ public class GameMaster : MonoBehaviour
 
         board = new GameObject[5, 5]; //would need board init function if we incorporate environmental tiles
 
-        psInd = 0;
+        pInd = 0;
+        eInd = 0;
     }
 
     void Update()
     {
-        if (playerDone) //put in update to wait for piece coroutines/animations
+        if (playerDone)
         {
             //move all players pieces
-            if (psInd < activePieceScripts.Count)
+            if (pInd < activePlayerPieces.Count)
             {
-                if (!activePieceScripts[psInd].moving)
-                    StartCoroutine(activePieceScripts[psInd].Move());
+                if (!activePlayerPieces[pInd].moving)
+                    StartCoroutine(activePlayerPieces[pInd].Move());
             }
             else
             {
@@ -73,10 +76,19 @@ public class GameMaster : MonoBehaviour
                     board = enemy.getPlacements(board);
                     enemyDone = true;
                 }
-                
-                //move all enemy pieces
-                //set enemy pieces moved to true when completed
 
+                //move all enemy pieces
+                if (eInd < activeEnemyPieces.Count)
+                {
+                    if (!activeEnemyPieces[eInd].moving)
+                        StartCoroutine(activeEnemyPieces[eInd].Move());
+                }
+                else
+                {
+                    enemyPiecesMoved = true;
+                }
+
+                //cleanup
                 if (enemyPiecesMoved)
                 {
                     player.StartTurn();
@@ -84,7 +96,8 @@ public class GameMaster : MonoBehaviour
                     enemyDone = false;
                     playerPiecesMoved = false;
                     enemyPiecesMoved = false;
-                    psInd = 0;
+                    pInd = 0;
+                    eInd = 0;
                 }
             }
         }
@@ -104,8 +117,16 @@ public class GameMaster : MonoBehaviour
 
     public void InitializePiece(PieceScript piece)
     {
-        activePieceScripts.Add(piece);
-        Debug.Log($"Added piece script {activePieceScripts.Last()} to board");
+        if (piece.enemyPiece)
+        {
+            activeEnemyPieces.Add(piece);
+            Debug.Log($"Added enemy piece {activeEnemyPieces.Last()} to board");
+        }
+        else
+        {
+            activePlayerPieces.Add(piece);
+            Debug.Log($"Added enemy piece {activePlayerPieces.Last()} to board");
+        }
     }
 
     public int[] GetPieceLocation(GameObject piece) 
