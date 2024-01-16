@@ -27,6 +27,7 @@ public class GameMaster : MonoBehaviour
     static List<PieceScript> activeEnemyPieces = new List<PieceScript>();
     public int pInd;
     public int eInd;
+    UnityEngine.Vector3 startPos;
 
     public static GameMaster Instance { get; private set; }
 
@@ -65,7 +66,14 @@ public class GameMaster : MonoBehaviour
             if (pInd < activePlayerPieces.Count)
             {
                 if (!activePlayerPieces[pInd].moving)
-                    StartCoroutine(activePlayerPieces[pInd].Move());
+                {
+                    startPos = activePlayerPieces[pInd].transform.position;
+                    //start coroutine, runs callback function when done
+                    StartCoroutine(activePlayerPieces[pInd].Move(() => {
+                        SetPieceLocOnBoard(activePlayerPieces[pInd].gameObject, startPos, activePlayerPieces[pInd].transform.position);
+                        pInd++;
+                    }));
+                }
             }
             else
             {
@@ -85,7 +93,14 @@ public class GameMaster : MonoBehaviour
                 if (eInd < activeEnemyPieces.Count)
                 {
                     if (!activeEnemyPieces[eInd].moving)
-                        StartCoroutine(activeEnemyPieces[eInd].Move());
+                    {
+                        startPos = activeEnemyPieces[eInd].transform.position;
+                        //start coroutine, runs callback function when done
+                        StartCoroutine(activeEnemyPieces[eInd].Move(() => {
+                            SetPieceLocOnBoard(activeEnemyPieces[eInd].gameObject, startPos, activeEnemyPieces[eInd].transform.position);
+                            eInd++;
+                        }));
+                    }
                 }
                 else
                 {

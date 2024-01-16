@@ -47,7 +47,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     public virtual void Attack(GameObject enemyPiece) { }
 
-    public virtual IEnumerator Move()
+    public virtual IEnumerator Move(System.Action onComplete)
     {
         //Unique logic to move would go here for every piece
         yield return null;

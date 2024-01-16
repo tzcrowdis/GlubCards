@@ -22,7 +22,7 @@ public class TheVoid : PieceScript
         base.Start();
     }
 
-    public override IEnumerator Move() 
+    public override IEnumerator Move(System.Action onComplete) 
     {
         moving = true;
 
@@ -52,6 +52,10 @@ public class TheVoid : PieceScript
         }
 
         LerpAlpha(colorTemp, 1, 1f, 1f);
+
+        moving = false;
+
+        onComplete?.Invoke();
 
         yield return null;
     }

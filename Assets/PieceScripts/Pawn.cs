@@ -19,7 +19,7 @@ public class Pawn : PieceScript
         base.Start();
     }
 
-    public override IEnumerator Move() //NEED TO ADAPT FOR ENEMY OWNED PIECE
+    public override IEnumerator Move(System.Action onComplete) //NEED TO ADAPT FOR ENEMY OWNED PIECE
     {
         moving = true;
         float x = transform.position.x;
@@ -74,13 +74,9 @@ public class Pawn : PieceScript
         transform.position = nextPos;
         transform.rotation = nextRot;
 
-        //give game master info
         moving = false;
-        if (enemyPiece)
-            GameMaster.Instance.eInd++;
-        else
-            GameMaster.Instance.pInd++;
-        UpdateBoardPosition(startPos, nextPos);
+
+        onComplete?.Invoke();
 
         yield return null;
     }
