@@ -60,16 +60,7 @@ public class BagOfPieces : MonoBehaviour
             {
                 if (pieces.Count > 0)
                 {
-                    //pull a random piece
-                    int randPiece = UnityEngine.Random.Range(0, pieces.Count);
-                    string pieceName = pieces[randPiece];
-                    GameObject piecePrefab = Resources.Load("Pieces/" + pieceName) as GameObject;
-
-                    //remove it from pieces [commented out for testing]
-                    //pieces.Remove(pieceName);
-
-                    //add it to game
-                    chosenPiece = Instantiate(piecePrefab, new Vector3(3f, 0.25f, -1f), Quaternion.identity); //NEED A METHOD TO HANDLE THIS
+                    PlaceRandomPiece();
                 }
                 else
                 {
@@ -86,6 +77,21 @@ public class BagOfPieces : MonoBehaviour
     {
         //disable hover effect
         grow = false;
+    }
+
+    void PlaceRandomPiece()
+    {
+        //pull a random piece
+        int randPiece = UnityEngine.Random.Range(0, pieces.Count);
+        string pieceName = pieces[randPiece];
+        GameObject piecePrefab = Resources.Load("Pieces/" + pieceName) as GameObject;
+
+        //remove it from pieces [commented out for testing]
+        //pieces.Remove(pieceName);
+
+        //add it to game
+        chosenPiece = Instantiate(piecePrefab, new Vector3(3f, 0.25f, -1f), Quaternion.identity); //NEED A WAY TO HANDLE THIS
+        chosenPiece.GetComponent<PieceScript>().enemyPiece = false;
     }
 
     void ReadPlayerPieces()

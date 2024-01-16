@@ -11,30 +11,59 @@ public class Pawn : PieceScript
     public override void Start() 
     {
         //set any unique variables here
+        hp = 1f;
+        dmg = 1f;
+        height = 0.5f; //based on model USE SETTER???
+
         Debug.Log($"Child script is {GetType()}");
         Debug.Log($"Parent script is {GetType().BaseType}");
+
         //Use base to call parent functions so generics get assigned
         base.Start();
     }
 
-    public override IEnumerator Move() 
+    public override IEnumerator Move() //NEED TO ADAPT FOR ENEMY OWNED PIECE
     {
         moving = true;
-
-        //Unique logic to move would go here for every piece
-
-        //pawns logic
-        //get board position
-        //check board one space ahead
-        //move or attack
         float x = transform.position.x;
-        float z = transform.position.z + 1;
+        float z = transform.position.z;
 
-        //move to the position
-        Vector3 currentPos = transform.position;
+        if (!enemyPiece)
+        {
+            //pawns logic
+            //check board one space ahead
+            //move or attack
+            
+            if (GameMaster.Instance.board[(int)x - 1, (int)z] != null)
+            {
+                Attack(GameMaster.Instance.board[(int)x - 1, (int)z]);
+            }
+            else
+            {
+                z++;
+            } 
+        }
+        else
+        {
+            //pawns logic as enemy piece
+            //check board one space ahead
+            //move or attack
+            if (GameMaster.Instance.board[(int)x - 1, (int)z - 2] != null)
+            {
+                Attack(GameMaster.Instance.board[(int)x - 1, (int)z - 2]);
+            }
+            else
+            {
+                z--;
+            }
+        }
+
+        //set piece specific move vars
         Vector3 nextPos = new Vector3(x, 0.5f, z);
-        Quaternion currentRot = transform.rotation;
         Quaternion nextRot = Quaternion.Euler(0, 0, 0);
+        Vector3 currentPos = transform.position;
+        Vector3 startPos = transform.position;
+        Quaternion currentRot = transform.rotation;
         float t = 0;
         float endTime = 1;
 
@@ -49,11 +78,38 @@ public class Pawn : PieceScript
         transform.position = nextPos;
         transform.rotation = nextRot;
 
+        //give game master info
         moving = false;
         if (enemyPiece)
             GameMaster.Instance.eInd++;
         else
             GameMaster.Instance.pInd++;
+        UpdateBoardPosition(startPos, nextPos);
+
         yield return null;
+    }
+
+    public override void Attack(GameObject enemyPiece)
+    {
+        try
+        {
+            enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    public override void Defend(GameObject enemy)
+    {
+        try
+        {
+            hp -= enemy.GetComponent<PieceScript>().dmg;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
     }
 }

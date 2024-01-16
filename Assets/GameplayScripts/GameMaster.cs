@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class GameMaster : MonoBehaviour
 {
+    string boss; //set by script that starts levels
+    
     Player player;
     bool playerDone;
     bool playerPiecesMoved;
@@ -18,14 +20,15 @@ public class GameMaster : MonoBehaviour
 
     Button endTurnButton;
 
-    GameObject[,] board; //grid that stores game objects [should it just be names?]
+    [HideInInspector]
+    public GameObject[,] board;
 
     static List<PieceScript> activePlayerPieces = new List<PieceScript>();
     static List<PieceScript> activeEnemyPieces = new List<PieceScript>();
     public int pInd;
     public int eInd;
 
-    public static GameMaster Instance { get; private set; } //good for one instance
+    public static GameMaster Instance { get; private set; }
 
     void Start()
     {
@@ -41,7 +44,8 @@ public class GameMaster : MonoBehaviour
         endTurnButton = GameObject.Find("EndTurnButton").GetComponent<Button>();
         endTurnButton.onClick.AddListener(EndTurn);
 
-        enemy = GameObject.Find("Enemy").GetComponent<Enemy>();
+        boss = "Imbecile"; //TEMPORARY
+        enemy = GameObject.Find(boss).GetComponent<Enemy>(); //MAKE SURE BOSS NAME CAN BE PASSED
         enemyDone = false;
 
         playerPiecesMoved = false;
@@ -73,7 +77,7 @@ public class GameMaster : MonoBehaviour
                 //wait for board state
                 if (!enemyDone)
                 {
-                    board = enemy.getPlacements(board);
+                    board = enemy.GetPlacements(board);
                     enemyDone = true;
                 }
 
@@ -91,6 +95,19 @@ public class GameMaster : MonoBehaviour
                 //cleanup
                 if (enemyPiecesMoved)
                 {
+                    /* CHECKS IF BOARD UPDATED PROPERLY
+                    for (int i = 0; i < 5; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            if (board[i, j] != null)
+                                Debug.Log($"({i}, {j}) {board[i, j].name}");
+                            else
+                                Debug.Log($"({i}, {j}) Empty");
+                        }
+                    }
+                    */
+                    
                     player.StartTurn();
                     playerDone = false;
                     enemyDone = false;
@@ -110,8 +127,10 @@ public class GameMaster : MonoBehaviour
         playerDone = true;
     }
 
-    public void SetPieceLocOnBoard(GameObject piece, Vector3 coord)
+    public void SetPieceLocOnBoard(GameObject piece, Vector3 oldCoord, Vector3 coord)
     {
+        if (oldCoord.z >= 0) //may need to update this check
+            board[(int)oldCoord.x - 1, (int)oldCoord.z - 1] = null;
         board[(int)coord.x - 1, (int)coord.z - 1] = piece;
     }
 
@@ -131,7 +150,6 @@ public class GameMaster : MonoBehaviour
 
     public int[] GetPieceLocation(GameObject piece) 
     {
-        return new int[] {(int)piece.transform.position.x, (int)piece.transform.position.y};
+        return new int[] {(int)piece.transform.position.x, (int)piece.transform.position.z};
     }
-
 }

@@ -28546,26 +28546,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1981947199}
-  - component: {fileID: 1981947198}
+  - component: {fileID: 1981947200}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Imbecile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1981947198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1981947197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d15e3b29dc8336b40b04a32aae1e3a31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1981947199
 Transform:
   m_ObjectHideFlags: 0
@@ -28582,6 +28570,19 @@ Transform:
   - {fileID: 198229485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1981947200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981947197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d442003f3760b4941a7e1361feab7f9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnText: {fileID: 0}
 --- !u!1001 &2105138625
 PrefabInstance:
   m_ObjectHideFlags: 0

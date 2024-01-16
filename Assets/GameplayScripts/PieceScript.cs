@@ -7,6 +7,11 @@ using UnityEngine.Scripting.APIUpdating;
 
 public abstract class PieceScript : MonoBehaviour //handles administrative generic piece tasks
 {
+    //basic gameplay variables
+    public float hp { get; protected set; }
+    public float dmg { get; protected set; }
+
+    //management variables
     Player player;
 
     bool selected;
@@ -17,9 +22,11 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     public bool moving;
 
-    public bool enemyPiece; //will need some way to set this when loading specific enemy
+    public bool enemyPiece; //set when prefab is instantiated
 
     public bool updatedMaster {get; private set;}
+
+    public float height;
 
     public virtual void Start()
     {
@@ -36,14 +43,19 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         moving = false;
     }
 
+    public virtual void Defend(GameObject enemyPiece) { }
+
+    public virtual void Attack(GameObject enemyPiece) { }
+
     public virtual IEnumerator Move()
     {
+        //Unique logic to move would go here for every piece
         yield return null;
     }
 
     private void OnMouseOver()
     {
-        if (player.selectingPiece && !inPlay)
+        if (player.selectingPiece && !inPlay && !enemyPiece)
         {
             //highlight card
             hoverLight.enabled = true;
@@ -63,7 +75,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     private void OnMouseExit()
     {
-        if (!selected)
+        if (!selected && !enemyPiece)
         {
             hoverLight.enabled = false;
         }
@@ -73,14 +85,12 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
     {
         if (!updatedMaster)
         {
-            UpdateBoardPosition(startPos);
+            UpdateBoardPosition(transform.position, startPos);
             updatedMaster = true;
         }
 
-        //set y direction based on piece height
-        startPos.y = 0.5f;
-        
         //move to the position and rotate to face enemy
+        startPos.y = height;
         Vector3 currentPos = transform.position;
         Quaternion currentRot = transform.rotation;
         Quaternion startRot = Quaternion.Euler(0, 0, 0);
@@ -101,10 +111,9 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         yield return null;
     }
 
-    void UpdateBoardPosition(Vector3 pos)
+    public void UpdateBoardPosition(Vector3 oldPos, Vector3 pos)
     {
-        //tell game master pieces position on board
-        GameMaster.Instance.SetPieceLocOnBoard(gameObject, pos);
+        GameMaster.Instance.SetPieceLocOnBoard(gameObject, oldPos, pos);
     }
 
 }
