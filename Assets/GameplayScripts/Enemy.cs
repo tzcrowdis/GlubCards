@@ -49,8 +49,8 @@ public class Enemy : MonoBehaviour
     protected void PlacePiece(string pieceName, Vector3 position) //upgrades???
     {
         GameObject piecePrefab = Resources.Load("Pieces/" + pieceName) as GameObject;
+        position.y = 0.5f; //ASSUMES THIS IS DEFAULT MODEL HEIGHT
         GameObject pieceObj = Instantiate(piecePrefab, position, Quaternion.identity); //adjust orientation???
-        pieceObj.transform.position = new Vector3(position.x, pieceObj.GetComponent<PieceScript>().height, position.z);
         pieceObj.GetComponent<PieceScript>().enemyPiece = true;
         GameMaster.Instance.InitializePiece(pieceObj.GetComponent<PieceScript>());
 

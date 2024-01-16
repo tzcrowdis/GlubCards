@@ -26,7 +26,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     public bool updatedMaster {get; private set;}
 
-    public float height;
+    public float height { get; protected set; }
 
     public virtual void Start()
     {

@@ -33,7 +33,6 @@ public class Pawn : PieceScript
             //pawns logic
             //check board one space ahead
             //move or attack
-            
             if (GameMaster.Instance.board[(int)x - 1, (int)z] != null)
             {
                 Attack(GameMaster.Instance.board[(int)x - 1, (int)z]);
@@ -106,6 +105,10 @@ public class Pawn : PieceScript
         try
         {
             hp -= enemy.GetComponent<PieceScript>().dmg;
+            if (hp <= 0)
+            {
+                Destroy(gameObject, 0f); //ADJUST 0f TO TIME OF DEATH ANIM
+            }
         }
         catch (Exception e)
         {
