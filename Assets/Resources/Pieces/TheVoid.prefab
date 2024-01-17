@@ -123,7 +123,7 @@ Transform:
   m_GameObject: {fileID: 8234383338683773977}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 3.024, y: 0.152, z: -0.369}
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -216,4 +216,3 @@ MonoBehaviour:
   hoverLight: {fileID: 0}
   moving: 0
   enemyPiece: 0
-  height: 0

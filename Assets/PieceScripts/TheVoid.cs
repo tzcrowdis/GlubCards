@@ -30,7 +30,7 @@ public class TheVoid : PieceScript
 
         //Get random position on board
         int destX = UnityEngine.Random.Range(0, board.GetLength(0));
-        int destY = UnityEngine.Random.Range(0, board.GetLength(1));
+        int destZ = UnityEngine.Random.Range(0, board.GetLength(1));
 
         //start fade out
         float t = 0f;
@@ -44,6 +44,8 @@ public class TheVoid : PieceScript
 
         LerpAlpha(colorTemp, 0, 0f, 0f);
         t = 0;
+
+        transform.position.Set(destX, 0.5f, destZ);
 
         while (t < 1)
         {
