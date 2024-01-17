@@ -27,7 +27,7 @@ public class GameMaster : MonoBehaviour
     static List<PieceScript> activeEnemyPieces = new List<PieceScript>();
     public int pInd;
     public int eInd;
-    UnityEngine.Vector3 startPos;
+    Vector3 startPos;
 
     public static GameMaster Instance { get; private set; }
 
@@ -176,5 +176,27 @@ public class GameMaster : MonoBehaviour
     public int[] GetPieceLocation(GameObject piece) 
     {
         return new int[] {(int)piece.transform.position.x, (int)piece.transform.position.z};
+    }
+
+    public void UpdateScore(GameObject player)
+    {
+        ScoreContainer score = GameObject.Find("ScoreContainer").GetComponent<ScoreContainer>();
+        //instantiates object on side of player that took damage
+        if (player.name == "Player")
+        {
+            score.IncrementScore(true);
+            if (score.playerHp == 0)
+            {
+                //enemy wins
+            }
+        }
+        else
+        {
+            score.IncrementScore(false);
+            if (score.enemyHp == 0)
+            {
+                //player wins
+            }
+        }
     }
 }

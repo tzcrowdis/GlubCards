@@ -16,12 +16,16 @@ public class Player : MonoBehaviour
     public PieceScript piece;
     Vector3 startPos;
 
+    float hp;
+
     void Start()
     {
         selectingPiece = false;
         pullPiece = true;
 
         bag = GameObject.Find("BagOfPieces").GetComponent<BagOfPieces>();
+
+        hp = 3;
     }
 
     void Update()
@@ -112,5 +116,12 @@ public class Player : MonoBehaviour
             startGrid[i].GetComponent<GridElemScript>().on = false;
             startGrid[i].GetComponent<GridElemScript>().selected = false;
         }
+    }
+
+    public void TakeDmg(GameObject attacker)
+    {
+        hp -= attacker.GetComponent<PieceScript>().dmg;
+
+        GameMaster.Instance.UpdateScore(gameObject);
     }
 }
