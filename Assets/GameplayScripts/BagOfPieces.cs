@@ -99,7 +99,7 @@ public class BagOfPieces : MonoBehaviour
                 startingRotation = Quaternion.Euler(0f, 180f, 0f);
                 break;
             default:
-                startingPosition = new Vector3(3f, 0f, -1f); //X AND Z STILL IMPERFECT
+                startingPosition = new Vector3(3f, 0.25f, -1f); //X AND Z STILL IMPERFECT
                 startingRotation = Quaternion.Euler(0f, 180f, 0f);
                 break;
         }
