@@ -17,8 +17,6 @@ public class Pawn : PieceScript
 
         //Use base to call parent functions so generics get assigned
         base.Start();
-
-        Debug.Log($"This is an enemy piece: {enemyPiece}");
     }
 
     public override IEnumerator Move(System.Action onComplete) //ALWAYS NEED TO ADAPT FOR ENEMY OWNED PIECE
@@ -46,14 +44,11 @@ public class Pawn : PieceScript
                     z++;
                 }
             }
-            catch (Exception e)
+            catch
             {
-                if (e.InnerException is IndexOutOfRangeException)
-                {
-                    //attack enemy
-                    Debug.Log("Attacking Enemy Directly");
-                    GameMaster.Instance.enemy.TakeDmg(gameObject);
-                }
+                //attack enemy
+                Debug.Log("Attacking Enemy Directly");
+                GameMaster.Instance.enemy.TakeDmg(gameObject);
             }
         }
         else
@@ -74,14 +69,11 @@ public class Pawn : PieceScript
                     z--;
                 }
             }
-            catch (Exception e)
+            catch
             {
-                if (e.InnerException is IndexOutOfRangeException)
-                {
-                    //attack player
-                    Debug.Log("Attacking Player Directly");
-                    GameMaster.Instance.player.TakeDmg(gameObject);
-                }
+                //attack player
+                Debug.Log("Attacking Player Directly");
+                GameMaster.Instance.player.TakeDmg(gameObject);
             }
         }
 

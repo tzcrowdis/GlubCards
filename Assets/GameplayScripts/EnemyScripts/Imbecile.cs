@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Imbecile : Enemy
@@ -31,12 +32,25 @@ public class Imbecile : Enemy
         int row = FindRow(board);
         if (row >= 0)
         {
-            PlacePiece(pieces[0], new Vector3(row + 1, 0.5f, board.GetLength(1)));
+            if (pieces.Count > 0)
+                PlacePiece(pieces[0], new Vector3(row + 1, 0.5f, board.GetLength(1)));
         }
         
         turnText.alpha = 1f;
         StartCoroutine(FadeText());
 
         return board;
+    }
+
+    public override void SetHp() 
+    {
+        hp = 3;
+    }
+
+    public override void TakeDmg(GameObject attacker)
+    {
+        hp -= attacker.GetComponent<PieceScript>().dmg;
+
+        GameMaster.Instance.UpdateScore(gameObject);
     }
 }

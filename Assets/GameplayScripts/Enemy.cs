@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
         pieceObj.GetComponent<PieceScript>().enemyPiece = true;
         GameMaster.Instance.InitializePiece(pieceObj.GetComponent<PieceScript>());
 
-        //pieces.Remove(pieceName);
+        pieces.Remove(pieceName);
     }
 
     public IEnumerator FadeText()
