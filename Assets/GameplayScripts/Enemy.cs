@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour
 
     protected List<string> pieces = new List<string>();
 
+    float hp;
+
     public virtual void Start()
     {
         turnText = GameObject.Find("Turn Visualization").GetComponent<TextMeshProUGUI>();
@@ -68,4 +70,8 @@ public class Enemy : MonoBehaviour
         turnText.alpha = 0f;
         yield return null;
     }
+
+    public virtual void SetHp() { }
+
+    public virtual void TakeDmg(GameObject attacker) { }
 }
