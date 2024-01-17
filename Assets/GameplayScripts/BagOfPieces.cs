@@ -90,7 +90,17 @@ public class BagOfPieces : MonoBehaviour
         //pieces.Remove(pieceName);
 
         //add it to game
-        chosenPiece = Instantiate(piecePrefab, new Vector3(3f, 0.25f, -1f), Quaternion.identity); //NEED A WAY TO HANDLE THIS
+        Vector3 startingPosition = new Vector3(0, 0, 0);
+        Quaternion startingRotation = Quaternion.identity;
+        switch (pieceName)
+        {
+            case "Soldier":
+                startingPosition = new Vector3(3f, 0f, -1f); //X AND Z STILL IMPERFECT
+                startingRotation = Quaternion.Euler(0f, 180f, 0f);
+                break;
+        }
+
+        chosenPiece = Instantiate(piecePrefab, startingPosition, startingRotation);
         chosenPiece.GetComponent<PieceScript>().enemyPiece = false;
     }
 

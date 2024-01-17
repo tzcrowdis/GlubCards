@@ -216,3 +216,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverLight: {fileID: 0}
+  moving: 0
+  enemyPiece: 0

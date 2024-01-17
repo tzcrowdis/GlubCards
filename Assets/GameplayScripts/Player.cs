@@ -88,14 +88,11 @@ public class Player : MonoBehaviour
 
     void TurnOnPieceSelection()
     {
-        //find all pieces to turn on
-
         selectingPiece = true;
     }
 
     void TurnOffPieceSelection()
     {
-        //find all pieces to turn off
         piece = null;
         selectingPiece = false;
     }

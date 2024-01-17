@@ -13,13 +13,13 @@ public class Pawn : PieceScript
         //set any unique variables here
         hp = 1f;
         dmg = 1f;
-        height = 0.5f; //based on model USE SETTER???
+        height = 0.16f; //based on model USE SETTER???
 
         //Use base to call parent functions so generics get assigned
         base.Start();
     }
 
-    public override IEnumerator Move(System.Action onComplete) //NEED TO ADAPT FOR ENEMY OWNED PIECE
+    public override IEnumerator Move(System.Action onComplete) //ALWAYS NEED TO ADAPT FOR ENEMY OWNED PIECE
     {
         moving = true;
         float x = transform.position.x;
@@ -55,24 +55,24 @@ public class Pawn : PieceScript
         }
 
         //set piece specific move vars
-        Vector3 nextPos = new Vector3(x, 0.5f, z);
-        Quaternion nextRot = Quaternion.Euler(0, 0, 0);
+        Vector3 nextPos = new Vector3(x, height, z);
+        //Quaternion nextRot = Quaternion.Euler(0, 180, 0);
         Vector3 currentPos = transform.position;
         Vector3 startPos = transform.position;
-        Quaternion currentRot = transform.rotation;
+        //Quaternion currentRot = transform.rotation;
         float t = 0;
         float endTime = 1;
 
         while (t < endTime)
         {
             transform.position = Vector3.Lerp(currentPos, nextPos, t);
-            transform.rotation = Quaternion.Lerp(currentRot, nextRot, t);
+            //transform.rotation = Quaternion.Lerp(currentRot, nextRot, t);
             t += Time.deltaTime;
             yield return null;
         }
 
         transform.position = nextPos;
-        transform.rotation = nextRot;
+        //transform.rotation = nextRot;
 
         moving = false;
 
@@ -100,6 +100,7 @@ public class Pawn : PieceScript
             hp -= enemy.GetComponent<PieceScript>().dmg;
             if (hp <= 0)
             {
+                GameMaster.Instance.RemovePieceFromBoard(gameObject);
                 Destroy(gameObject, 0f); //ADJUST 0f TO TIME OF DEATH ANIM
             }
         }

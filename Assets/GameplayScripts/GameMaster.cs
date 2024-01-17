@@ -149,6 +149,16 @@ public class GameMaster : MonoBehaviour
         board[(int)coord.x - 1, (int)coord.z - 1] = piece;
     }
 
+    public void RemovePieceFromBoard(GameObject dying)
+    {
+        board[(int)dying.transform.position.x - 1, (int)dying.transform.position.z - 1] = null;
+
+        if (dying.GetComponent<PieceScript>().enemyPiece)
+            activeEnemyPieces.Remove(dying.GetComponent<PieceScript>());
+        else
+            activePlayerPieces.Remove(dying.GetComponent<PieceScript>());
+    }
+
     public void InitializePiece(PieceScript piece)
     {
         if (piece.enemyPiece)
@@ -159,7 +169,7 @@ public class GameMaster : MonoBehaviour
         else
         {
             activePlayerPieces.Add(piece);
-            Debug.Log($"Added enemy piece {activePlayerPieces.Last()} to board");
+            Debug.Log($"Added player piece {activePlayerPieces.Last()} to board");
         }
     }
 

@@ -53,7 +53,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         yield return null;
     }
 
-    private void OnMouseOver()
+    void OnMouseOver()
     {
         if (player.selectingPiece && !inPlay && !enemyPiece)
         {
@@ -93,7 +93,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         startPos.y = height;
         Vector3 currentPos = transform.position;
         Quaternion currentRot = transform.rotation;
-        Quaternion startRot = Quaternion.Euler(0, 0, 0);
+        Quaternion startRot = Quaternion.Euler(0, 180, 0); //changed y rotation
         float t = 0;
         float endTime = 1;
 
