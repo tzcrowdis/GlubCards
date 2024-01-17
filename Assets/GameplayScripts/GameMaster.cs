@@ -10,17 +10,16 @@ public class GameMaster : MonoBehaviour
 {
     string boss; //set by script that starts levels
     
-    Player player;
+    public Player player;
     bool playerDone;
     bool playerPiecesMoved;
 
-    Enemy enemy;
+    public Enemy enemy;
     bool enemyDone;
     bool enemyPiecesMoved;
 
     Button endTurnButton;
 
-    [HideInInspector]
     public GameObject[,] board;
 
     static List<PieceScript> activePlayerPieces = new List<PieceScript>();
@@ -181,7 +180,6 @@ public class GameMaster : MonoBehaviour
     public void UpdateScore(GameObject player)
     {
         ScoreContainer score = GameObject.Find("ScoreContainer").GetComponent<ScoreContainer>();
-        //instantiates object on side of player that took damage
         if (player.name == "Player")
         {
             score.IncrementScore(true);

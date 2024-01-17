@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
 
     protected List<string> pieces = new List<string>();
 
-    float hp;
+    public float hp { get; protected set; }
 
     public virtual void Start()
     {
