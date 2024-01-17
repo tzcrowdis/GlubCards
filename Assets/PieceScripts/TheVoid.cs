@@ -9,11 +9,12 @@ using static UnityEditor.PlayerSettings;
 public class TheVoid : PieceScript
 {
     MeshRenderer mesh;
+    readonly float moveSpeed = 2f;
     public override void Start() 
     {
         //set any unique variables here
         hp = 1f;
-        dmg = 1f;
+        dmg = 4f;
         height = 0.5f;
 
         mesh = GetComponent<MeshRenderer>();
@@ -22,6 +23,7 @@ public class TheVoid : PieceScript
         base.Start();
     }
 
+    //Not currently compatible as an enemy piece
     public override IEnumerator Move(System.Action onComplete) 
     {
         moving = true;
@@ -29,8 +31,34 @@ public class TheVoid : PieceScript
         GameObject[,] board = GameMaster.Instance.board;
 
         //Get random position on board
-        int destX = UnityEngine.Random.Range(0, board.GetLength(0));
-        int destZ = UnityEngine.Random.Range(0, board.GetLength(1));
+        //TODO, avoid spaces with friendly pieces
+        int rngX = UnityEngine.Random.Range(0, board.GetLength(0));
+        int rngZ = UnityEngine.Random.Range(0, board.GetLength(1));
+        int destX = (int)Math.Round(transform.position.x);
+        int destZ = (int)Math.Round(transform.position.y);
+        bool found = false;
+
+        //Find a null space on the board
+        for (int i = 0; i < board.GetLength(0); i++)
+        {
+            for (int j = 0; j < board.GetLength(1); j++)
+            {
+                if (board[i, j] == null || board[i, j].GetComponent<PieceScript>().enemyPiece)
+                {
+                    destX = i + 1;
+                    destZ = j + 1;
+                }
+                if (destX != -1 && j >= rngZ && i >= rngX)
+                {
+                    found = true;
+                    break;
+                }       
+            }
+            if (found)
+            break;
+        }
+
+        Debug.Log($"Void is trying to go to space {destX}, {destZ}");
 
         //start fade out
         float t = 0f;
@@ -42,10 +70,21 @@ public class TheVoid : PieceScript
             yield return null;
         }
 
+        //end fade out
         LerpAlpha(colorTemp, 0, 0f, 0f);
         t = 0;
 
-        transform.position.Set(destX, 0.5f, destZ);
+        //Check if a piece is on the board
+        GameObject objOnBoard = GameMaster.Instance.board[destX - 1, destZ - 1];
+        if (objOnBoard == this)
+            objOnBoard = null;
+
+        if (objOnBoard != null)
+        {
+            transform.position = new Vector3(destX, 2f, destZ);
+        }
+        else
+            transform.position = new Vector3(destX, 0.5f, destZ);
 
         while (t < 1)
         {
@@ -54,6 +93,25 @@ public class TheVoid : PieceScript
         }
 
         LerpAlpha(colorTemp, 1, 1f, 1f);
+
+        //Attack if piece exists
+        if (objOnBoard != null)
+        {
+            Attack(objOnBoard);
+            yield return new WaitForSeconds(0.5f);
+
+            //lower to board
+            t = 0;
+            Vector3 start = transform.position;
+            Vector3 end = transform.position - new Vector3(0f, 2f - height, 0f);
+            while (t < 1)
+            {
+                transform.position = Vector3.Lerp(start, end, t);
+                t += Time.deltaTime * moveSpeed;
+                yield return null;
+            }
+            transform.position = end;
+        }
 
         moving = false;
 
@@ -66,7 +124,7 @@ public class TheVoid : PieceScript
     {
         colorTemp.a = Mathf.Lerp(from, to, t);
         mesh.material.color = colorTemp;
-        return t + Time.deltaTime;
+        return t + (Time.deltaTime * moveSpeed);
     }
 
     public override void Attack(GameObject enemyPiece)
@@ -86,6 +144,11 @@ public class TheVoid : PieceScript
         try
         {
             hp -= enemy.GetComponent<PieceScript>().dmg;
+            if (hp <= 0)
+            {
+                GameMaster.Instance.RemovePieceFromBoard(gameObject);
+                Destroy(gameObject, 0f); //ADJUST 0f TO TIME OF DEATH ANIM
+            }
         }
         catch (Exception e)
         {
