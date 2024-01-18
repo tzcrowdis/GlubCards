@@ -32,18 +32,20 @@ public class ScoreContainer : MonoBehaviour
     }
 
     //UNCOMMENT TO TEST
-    /*
+    
     private void Update()
     {
         //testing
+        /*
         IncrementScore(true);
         IncrementScore(true);
         IncrementScore(true);
         IncrementScore(false);
         IncrementScore(false);
         IncrementScore(false);
+        */
     }
-    */
+    
 
     public void IncrementScore(bool player)
     {

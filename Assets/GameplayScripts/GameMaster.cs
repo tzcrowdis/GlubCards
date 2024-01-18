@@ -90,7 +90,7 @@ public class GameMaster : MonoBehaviour
                 }
 
                 //move all enemy pieces
-                if (eInd < activeEnemyPieces.Count)
+                else if (eInd < activeEnemyPieces.Count)
                 {
                     if (!activeEnemyPieces[eInd].moving)
                     {
