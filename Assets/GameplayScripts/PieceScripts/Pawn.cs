@@ -13,7 +13,7 @@ public class Pawn : PieceScript
         //set any unique variables here
         hp = 1f;
         dmg = 1f;
-        height = 0.16f; //based on model USE SETTER???
+        height = 0.16f;
 
         //Use base to call parent functions so generics get assigned
         base.Start();
@@ -24,33 +24,56 @@ public class Pawn : PieceScript
         moving = true;
         float x = transform.position.x;
         float z = transform.position.z;
+        GameObject spaceInFront;
 
         if (!enemyPiece)
         {
             //pawns logic
             //check board one space ahead
             //move or attack
-            if (GameMaster.Instance.board[(int)x - 1, (int)z] != null)
+            try
             {
-                Attack(GameMaster.Instance.board[(int)x - 1, (int)z]);
+                spaceInFront = GameMaster.Instance.board[(int)x - 1, (int)z];
+                if (spaceInFront != null)
+                {
+                    if (spaceInFront.GetComponent<PieceScript>().enemyPiece)
+                        Attack(spaceInFront);
+                }
+                else
+                {
+                    z++;
+                }
             }
-            else
+            catch
             {
-                z++;
-            } 
+                //attack enemy
+                Debug.Log("Attacking Enemy Directly");
+                GameMaster.Instance.enemy.TakeDmg(gameObject);
+            }
         }
         else
         {
             //pawns logic as enemy piece
             //check board one space ahead
             //move or attack
-            if (GameMaster.Instance.board[(int)x - 1, (int)z - 2] != null)
+            try
             {
-                Attack(GameMaster.Instance.board[(int)x - 1, (int)z - 2]);
+                spaceInFront = GameMaster.Instance.board[(int)x - 1, (int)z - 2];
+                if (spaceInFront != null)
+                {
+                    if (!spaceInFront.GetComponent<PieceScript>().enemyPiece)
+                        Attack(spaceInFront);
+                }
+                else
+                {
+                    z--;
+                }
             }
-            else
+            catch
             {
-                z--;
+                //attack player
+                Debug.Log("Attacking Player Directly");
+                GameMaster.Instance.player.TakeDmg(gameObject);
             }
         }
 

@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
 
     protected List<string> pieces = new List<string>();
 
-    float hp;
+    public float hp { get; protected set; }
 
     public virtual void Start()
     {
@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
         pieceObj.GetComponent<PieceScript>().enemyPiece = true;
         GameMaster.Instance.InitializePiece(pieceObj.GetComponent<PieceScript>());
 
-        //pieces.Remove(pieceName);
+        pieces.Remove(pieceName);
     }
 
     public IEnumerator FadeText()
