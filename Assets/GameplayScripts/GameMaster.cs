@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameMaster : MonoBehaviour
@@ -19,6 +20,7 @@ public class GameMaster : MonoBehaviour
     bool enemyPiecesMoved;
 
     Button endTurnButton;
+    Button restartButton;
 
     public GameObject[,] board;
 
@@ -44,8 +46,12 @@ public class GameMaster : MonoBehaviour
         endTurnButton = GameObject.Find("EndTurnButton").GetComponent<Button>();
         endTurnButton.onClick.AddListener(EndTurn);
 
+        restartButton = GameObject.Find("RestartButton").GetComponent<Button>();
+        restartButton.onClick.AddListener(RestartLevel);
+        restartButton.gameObject.SetActive(false);
+
         boss = "Imbecile"; //TEMPORARY
-        enemy = GameObject.Find(boss).GetComponent<Enemy>(); //MAKE SURE BOSS NAME CAN BE PASSED
+        enemy = GameObject.Find(boss).GetComponent<Enemy>();
         enemyDone = false;
 
         playerPiecesMoved = false;
@@ -186,6 +192,11 @@ public class GameMaster : MonoBehaviour
             if (score.playerHp == 0)
             {
                 //enemy wins
+                Debug.Log("Loser");
+                playerDone = false; //don't continue last turn
+                BagOfPieces.Instance.DisableBag();
+                restartButton.gameObject.SetActive(true);
+                endTurnButton.gameObject.SetActive(false);
             }
         }
         else
@@ -194,7 +205,18 @@ public class GameMaster : MonoBehaviour
             if (score.enemyHp == 0)
             {
                 //player wins
+                Debug.Log("Winner");
+                playerDone = false; //don't continue last turn
+                BagOfPieces.Instance.DisableBag();
+                restartButton.gameObject.SetActive(true);
+                endTurnButton.gameObject.SetActive(false);
             }
         }
+    }
+
+    private void RestartLevel()
+    {
+        //reloads scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

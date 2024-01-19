@@ -17,8 +17,15 @@ public class BagOfPieces : MonoBehaviour
     Vector3 endSize;
     Vector3 scaleChange;
 
+    public static BagOfPieces Instance { get; private set; }
+
     private void Start()
     {
+        if (Instance == null)
+            Instance = this;
+        else
+            UnityEngine.Object.Destroy(Instance.gameObject);
+
         //load pieces player has from file containing names
         ReadPlayerPieces();
         
@@ -77,6 +84,11 @@ public class BagOfPieces : MonoBehaviour
     {
         //disable hover effect
         grow = false;
+    }
+
+    public void DisableBag()
+    {
+        pulling = false;
     }
 
     void PlaceRandomPiece()
