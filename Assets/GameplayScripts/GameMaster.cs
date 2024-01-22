@@ -150,13 +150,13 @@ public class GameMaster : MonoBehaviour
     public void SetPieceLocOnBoard(GameObject piece, Vector3 oldCoord, Vector3 coord)
     {
         if (oldCoord.z >= 0) //may need to update this check
-            board[(int)oldCoord.x - 1, (int)oldCoord.z - 1] = null;
-        board[(int)coord.x - 1, (int)coord.z - 1] = piece;
+            board[(int)oldCoord.x, (int)oldCoord.z] = null;
+        board[(int)coord.x, (int)coord.z] = piece;
     }
 
     public void RemovePieceFromBoard(GameObject dying)
     {
-        board[(int)dying.transform.position.x - 1, (int)dying.transform.position.z - 1] = null;
+        board[(int)dying.transform.position.x, (int)dying.transform.position.z] = null;
 
         if (dying.GetComponent<PieceScript>().enemyPiece)
             activeEnemyPieces.Remove(dying.GetComponent<PieceScript>());
@@ -178,7 +178,7 @@ public class GameMaster : MonoBehaviour
         }
     }
 
-    public int[] GetPieceLocation(GameObject piece) 
+    public int[] GetPieceLocation(GameObject piece)
     {
         return new int[] {(int)piece.transform.position.x, (int)piece.transform.position.z};
     }

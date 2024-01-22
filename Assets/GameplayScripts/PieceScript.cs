@@ -27,7 +27,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         player = GameObject.Find("Player").GetComponent<Player>();
         selected = false;
 
-        infoCanvas = GameObject.Find("InfoCanvas").GetComponent<Canvas>();
+        infoCanvas = gameObject.GetComponentInChildren<Canvas>();
         infoCanvas.enabled = false;
 
         hoverLight = transform.GetChild(0).gameObject.GetComponent<Light>();

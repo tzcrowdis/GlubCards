@@ -32,7 +32,7 @@ public class Pawn : PieceScript
             //move or attack
             try
             {
-                spaceInFront = GameMaster.Instance.board[(int)x - 1, (int)z];
+                spaceInFront = GameMaster.Instance.board[(int)x, (int)z + 1];
                 if (spaceInFront != null)
                 {
                     if (spaceInFront.GetComponent<PieceScript>().enemyPiece)
@@ -57,7 +57,7 @@ public class Pawn : PieceScript
             //move or attack
             try
             {
-                spaceInFront = GameMaster.Instance.board[(int)x - 1, (int)z - 2];
+                spaceInFront = GameMaster.Instance.board[(int)x, (int)z - 1];
                 if (spaceInFront != null)
                 {
                     if (!spaceInFront.GetComponent<PieceScript>().enemyPiece)

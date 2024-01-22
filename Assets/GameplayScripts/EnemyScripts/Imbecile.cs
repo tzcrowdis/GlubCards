@@ -33,7 +33,7 @@ public class Imbecile : Enemy
         if (row >= 0)
         {
             if (pieces.Count > 0)
-                PlacePiece(pieces[0], new Vector3(row + 1, 0.5f, board.GetLength(1)));
+                PlacePiece(pieces[0], new Vector3(row, 0.5f, board.GetLength(1) - 1));
         }
         
         turnText.alpha = 1f;

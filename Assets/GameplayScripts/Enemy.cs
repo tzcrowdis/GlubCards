@@ -20,7 +20,8 @@ public class Enemy : MonoBehaviour
         turnText.alpha = 0f;
     }
 
-    public virtual GameObject[,] GetPlacements(GameObject[,] board) //override this with individual AI logic
+    //override this with individual AI logic
+    public virtual GameObject[,] GetPlacements(GameObject[,] board) 
     {
         turnText.alpha = 1f;
         StartCoroutine(FadeText());

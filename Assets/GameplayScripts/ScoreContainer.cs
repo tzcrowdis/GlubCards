@@ -24,8 +24,8 @@ public class ScoreContainer : MonoBehaviour
 
         for (int i = 0; i < playerHp; i++) //assumes playerHp == enemyHp
         {
-            pPositions[i] = new Vector3(UnityEngine.Random.Range(-0.25f * i, 0.25f * i), 7f, UnityEngine.Random.Range(0f, 0.2f));
-            ePositions[i] = new Vector3(UnityEngine.Random.Range(6f - 0.25f * i, 6f + 0.25f), 7f, UnityEngine.Random.Range(5.5f, 5.7f));
+            pPositions[i] = new Vector3(UnityEngine.Random.Range(-1f - 0.25f * i, -1f + 0.25f * i), 7f, UnityEngine.Random.Range(-1f, -1.2f));
+            ePositions[i] = new Vector3(UnityEngine.Random.Range(5f - 0.25f * i, 5f + 0.25f), 7f, UnityEngine.Random.Range(4.5f, 4.7f));
         }
 
         scorePiece = Resources.Load("Dagger") as GameObject;

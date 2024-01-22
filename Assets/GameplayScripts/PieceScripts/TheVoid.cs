@@ -115,7 +115,7 @@ public class TheVoid : PieceScript
 
         moving = false;
 
-        //onComplete?.Invoke();
+        onComplete?.Invoke();
 
         yield return null;
     }
