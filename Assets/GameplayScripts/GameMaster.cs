@@ -74,7 +74,7 @@ public class GameMaster : MonoBehaviour
                 {
                     startPos = activePlayerPieces[pInd].transform.position;
                     //start coroutine, runs callback function when done
-                    StartCoroutine(activePlayerPieces[pInd].Move(() => {
+                    StartCoroutine(activePlayerPieces[pInd].Act(() => {
                         SetPieceLocOnBoard(activePlayerPieces[pInd].gameObject, startPos, activePlayerPieces[pInd].transform.position);
                         pInd++;
                     }));
@@ -101,7 +101,7 @@ public class GameMaster : MonoBehaviour
                     {
                         startPos = activeEnemyPieces[eInd].transform.position;
                         //start coroutine, runs callback function when done
-                        StartCoroutine(activeEnemyPieces[eInd].Move(() => {
+                        StartCoroutine(activeEnemyPieces[eInd].Act(() => {
                             SetPieceLocOnBoard(activeEnemyPieces[eInd].gameObject, startPos, activeEnemyPieces[eInd].transform.position);
                             eInd++;
                         }));

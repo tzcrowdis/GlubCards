@@ -24,7 +24,7 @@ public class TheVoid : PieceScript
     }
 
     //Not currently compatible as an enemy piece
-    public override IEnumerator Move(System.Action onComplete) 
+    public override IEnumerator Act(System.Action onComplete) 
     {
         moving = true;
 
@@ -115,7 +115,7 @@ public class TheVoid : PieceScript
 
         moving = false;
 
-        onComplete?.Invoke();
+        //onComplete?.Invoke();
 
         yield return null;
     }

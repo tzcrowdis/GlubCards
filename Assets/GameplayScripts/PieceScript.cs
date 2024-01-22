@@ -13,25 +13,22 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     //management variables
     Player player;
-
     bool selected;
-
     bool inPlay;
-
+    Canvas infoCanvas;
     public Light hoverLight;
-
     public bool moving;
-
     public bool enemyPiece; //set when prefab is instantiated
-
     public bool updatedMaster {get; private set;}
-
     public float height { get; protected set; }
 
     public virtual void Start()
     {
         player = GameObject.Find("Player").GetComponent<Player>();
         selected = false;
+
+        infoCanvas = GameObject.Find("InfoCanvas").GetComponent<Canvas>();
+        infoCanvas.enabled = false;
 
         hoverLight = transform.GetChild(0).gameObject.GetComponent<Light>();
         hoverLight.enabled = false;
@@ -43,18 +40,30 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         moving = false;
     }
 
+    //individual piece methods
     public virtual void Defend(GameObject enemyPiece) { }
 
     public virtual void Attack(GameObject enemyPiece) { }
 
-    public virtual IEnumerator Move(System.Action onComplete)
+    public virtual IEnumerator Move(float x, float z)
     {
-        //Unique logic to move would go here for every piece
         yield return null;
     }
 
+    public virtual IEnumerator Act(System.Action onComplete)
+    {
+        moving = true;
+        //individual logic here
+        moving = false;
+        onComplete?.Invoke();
+        yield return null;
+    }
+
+    //every piece methods
     void OnMouseOver()
     {
+        infoCanvas.enabled = true;
+        
         if (player.selectingPiece && !inPlay && !enemyPiece)
         {
             //highlight card
@@ -75,6 +84,8 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     private void OnMouseExit()
     {
+        infoCanvas.enabled = false;
+        
         if (!selected && !enemyPiece)
         {
             hoverLight.enabled = false;

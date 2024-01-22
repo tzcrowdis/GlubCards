@@ -10,18 +10,17 @@ public class Pawn : PieceScript
 {
     public override void Start() 
     {
-        //set any unique variables here
         hp = 1f;
         dmg = 1f;
         height = 0.16f;
 
-        //Use base to call parent functions so generics get assigned
         base.Start();
     }
 
-    public override IEnumerator Move(System.Action onComplete) //ALWAYS NEED TO ADAPT FOR ENEMY OWNED PIECE
+    public override IEnumerator Act(System.Action onComplete)
     {
         moving = true;
+
         float x = transform.position.x;
         float z = transform.position.z;
         GameObject spaceInFront;
@@ -77,30 +76,30 @@ public class Pawn : PieceScript
             }
         }
 
+        yield return Move(x, z);
+
+        moving = false;
+        onComplete?.Invoke();
+
+        yield return null;
+    }
+
+    public override IEnumerator Move(float x, float z)
+    {
         //set piece specific move vars
         Vector3 nextPos = new Vector3(x, height, z);
-        //Quaternion nextRot = Quaternion.Euler(0, 180, 0);
         Vector3 currentPos = transform.position;
-        Vector3 startPos = transform.position;
-        //Quaternion currentRot = transform.rotation;
         float t = 0;
         float endTime = 1;
 
         while (t < endTime)
         {
             transform.position = Vector3.Lerp(currentPos, nextPos, t);
-            //transform.rotation = Quaternion.Lerp(currentRot, nextRot, t);
             t += Time.deltaTime;
             yield return null;
         }
 
         transform.position = nextPos;
-        //transform.rotation = nextRot;
-
-        moving = false;
-
-        onComplete?.Invoke();
-
         yield return null;
     }
 
