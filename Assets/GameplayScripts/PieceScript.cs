@@ -41,15 +41,6 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
     }
 
     //individual piece methods
-    public virtual void Defend(GameObject enemyPiece) { }
-
-    public virtual void Attack(GameObject enemyPiece) { }
-
-    public virtual IEnumerator Move(float x, float z)
-    {
-        yield return null;
-    }
-
     public virtual IEnumerator Act(System.Action onComplete)
     {
         moving = true;
@@ -58,6 +49,16 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         onComplete?.Invoke();
         yield return null;
     }
+
+    public virtual IEnumerator Move(float x, float z)
+    {
+        yield return null;
+    }
+
+    public virtual void Attack(GameObject enemyPiece) { }
+
+    public virtual void Defend(GameObject enemyPiece) { }
+
 
     //every piece methods
     void OnMouseOver()

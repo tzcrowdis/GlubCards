@@ -71,7 +71,7 @@ public class Pawn : PieceScript
             catch
             {
                 //attack player
-                Debug.Log("Attacking Player Directly");
+                Debug.Log($"{gameObject.name} is attacking Player Directly");
                 GameMaster.Instance.player.TakeDmg(gameObject);
             }
         }
@@ -115,11 +115,11 @@ public class Pawn : PieceScript
         }
     }
 
-    public override void Defend(GameObject enemy)
+    public override void Defend(GameObject enemyPiece)
     {
         try
         {
-            hp -= enemy.GetComponent<PieceScript>().dmg;
+            hp -= enemyPiece.GetComponent<PieceScript>().dmg;
             if (hp <= 0)
             {
                 GameMaster.Instance.RemovePieceFromBoard(gameObject);

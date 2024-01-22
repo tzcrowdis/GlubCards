@@ -57,7 +57,7 @@ public class GameMaster : MonoBehaviour
         playerPiecesMoved = false;
         enemyPiecesMoved = false;
 
-        board = new GameObject[5, 5]; //would need board init function if we incorporate environmental tiles
+        board = new GameObject[6, 5]; //would need board init function if we incorporate environmental tiles
 
         pInd = 0;
         eInd = 0;

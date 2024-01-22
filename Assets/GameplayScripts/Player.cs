@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     bool yourTurn; //set by game master
 
-    public GameObject[] startGrid = new GameObject[5];
+    public GameObject[] startGrid = new GameObject[6];
 
     public bool selectingPiece;
 
