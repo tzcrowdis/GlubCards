@@ -15,17 +15,17 @@ public class CrossEye : PieceScript
     {
         hp = 1f;
         dmg = 1f;
-        height = 0.16f;
+        height = 0.15f;
 
         if (enemyPiece)
         {
-            startRow = GameMaster.Instance.board.GetLength(1);
+            startRow = GameMaster.Instance.board.GetLength(1) - 1;
             endRow = 0;
         }
         else
         {
             startRow = 0;
-            endRow = GameMaster.Instance.board.GetLength(1);
+            endRow = GameMaster.Instance.board.GetLength(1) - 1;
         }
 
         base.Start();
@@ -40,7 +40,7 @@ public class CrossEye : PieceScript
 
         //determine next position
         GameObject spaceInFront = null; ;
-        if (z == startRow) //this whole block is very confusing CHECK VISUALLY
+        if (z == startRow) //CAN THIS WHOLE BLOCK BE CLEANER???
         {
             if (x <= 2f)
             {
@@ -73,13 +73,21 @@ public class CrossEye : PieceScript
                 }
             }
         }
-        else if (z == endRow)
+        else if (z >= endRow)
         {
             //attack directly
-            Debug.Log($"{gameObject.name} is attacking Player Directly");
-            GameMaster.Instance.player.TakeDmg(gameObject);
+            if (enemyPiece)
+            {
+                Debug.Log($"{gameObject.name} is attacking Player Directly");
+                GameMaster.Instance.player.TakeDmg(gameObject);
+            }
+            else
+            {
+                Debug.Log($"{gameObject.name} is attacking Enemy Directly");
+                GameMaster.Instance.enemy.TakeDmg(gameObject);
+            }
         }
-        else
+        else //REWORK BOUNDS
         {
             if (left)
             {
@@ -144,13 +152,23 @@ public class CrossEye : PieceScript
                 }
             }
         }
-        spaceInFront = GameMaster.Instance.board[(int)x, (int)z];
+        try
+        {
+            spaceInFront = GameMaster.Instance.board[(int)x, (int)z];
+        }
+        catch
+        {
+            spaceInFront = null;
+            x = transform.position.x;
+            z = transform.position.z;
+        }
 
         //XOR enforces pieces aren't on the same side
-        if (spaceInFront != null && (spaceInFront.GetComponent<PieceScript>().enemyPiece ^ enemyPiece)) 
+        if (spaceInFront != null) 
         {
             //attack
-            Attack(spaceInFront);
+            if (spaceInFront.GetComponent<PieceScript>().enemyPiece ^ enemyPiece)
+                Attack(spaceInFront);
 
             //dont move if attack
             x = transform.position.x;

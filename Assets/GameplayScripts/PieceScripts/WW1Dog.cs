@@ -53,9 +53,7 @@ public class WW1Dog : PieceScript
         {
             //attach text bubble to them
             //"oh god, it's just looking at me..."
-            StartCoroutine(DisplayAttackText((enemyPiece) => {
-                enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
-            }));
+            StartCoroutine(DisplayAttackText(enemyPiece));
             enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
         }
         catch (Exception e)
@@ -64,7 +62,7 @@ public class WW1Dog : PieceScript
         }
     }
 
-    IEnumerator DisplayAttackText(GameObject enemyPiece, System.Action onComplete)
+    IEnumerator DisplayAttackText(GameObject enemyPiece)
     {
         //load text
         GameObject dogDeathText = Resources.Load("UI/dogDeathText") as GameObject; //MAKE PREFAB
@@ -78,7 +76,6 @@ public class WW1Dog : PieceScript
         //destroy
         Destroy(dogDeathText, 0f);
 
-        onComplete?.Invoke();
         yield return null;
     }
 

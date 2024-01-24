@@ -108,11 +108,11 @@ public class BagOfPieces : MonoBehaviour
         {
             case "Soldier":
                 startingPosition = new Vector3(2f, 0f, -1.5f); //X AND Z STILL IMPERFECT
-                startingRotation = Quaternion.Euler(0f, 180f, 0f);
+                startingRotation = Quaternion.Euler(0f, 180f, 0f); //180 BC SOLDIER IMPORTED INCORRECTLY
                 break;
             default:
-                startingPosition = new Vector3(2f, 0.25f, -1.5f); //X AND Z STILL IMPERFECT
-                startingRotation = Quaternion.Euler(0f, 180f, 0f);
+                startingPosition = new Vector3(2f, 0f, -1.5f); //X AND Z STILL IMPERFECT
+                startingRotation = Quaternion.Euler(0f, 0f, 0f);
                 break;
         }
 

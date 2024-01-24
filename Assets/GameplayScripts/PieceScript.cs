@@ -105,7 +105,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         startPos.y = height;
         Vector3 currentPos = transform.position;
         Quaternion currentRot = transform.rotation;
-        Quaternion startRot = Quaternion.Euler(0, 180, 0); //changed y rotation
+        Quaternion startRot = Quaternion.Euler(0, 0, 0); //MAKE SURE ALL PIECES ARE IMPORTED CORRECTLY
         float t = 0;
         float endTime = 1;
 
