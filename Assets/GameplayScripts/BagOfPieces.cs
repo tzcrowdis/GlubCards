@@ -10,6 +10,8 @@ public class BagOfPieces : MonoBehaviour
     List<string> pieces = new List<string>();
     GameObject chosenPiece;
 
+    public int[,] activeSlots = new int[6, 2];
+
     public bool pulling;
 
     bool grow;
@@ -102,8 +104,9 @@ public class BagOfPieces : MonoBehaviour
         //pieces.Remove(pieceName);
 
         //add it to game
-        Vector3 startingPosition = new Vector3(0, 0, 0);
+        Vector3 startingPosition = new Vector3(2f, 3f, -1.5f); //randomize vars???
         Quaternion startingRotation = Quaternion.identity;
+        /*
         switch (pieceName)
         {
             case "Soldier":
@@ -115,9 +118,13 @@ public class BagOfPieces : MonoBehaviour
                 startingRotation = Quaternion.Euler(0f, 0f, 0f);
                 break;
         }
+        */
 
         chosenPiece = Instantiate(piecePrefab, startingPosition, startingRotation);
         chosenPiece.GetComponent<PieceScript>().enemyPiece = false;
+
+        //detect collision then move to open slot
+        //done in piece script
     }
 
     void ReadPlayerPieces()

@@ -74,7 +74,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         hoverHeight = 0.25f + height;
         upSpeed = 0.01f;
         hoverRotation = 180f;
-        rotSpeed = 5f;
+        rotSpeed = 1f;
 
         inPlay = false;
 
@@ -98,7 +98,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
             }
         }
         
-        if (hovering)
+        if ((hovering || selected) && !inPlay)
         {
             //raise and twist
             if (transform.position.y < hoverHeight && transform.rotation.eulerAngles.y < hoverRotation)
@@ -152,8 +152,8 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
                 infoCanvas.transform.Rotate(new Vector3(0f, 180f, 0f));
 
                 //Initialize the piece on the board
-                GameMaster.Instance.InitializePiece(this);
-                inPlay = true;
+                //GameMaster.Instance.InitializePiece(this);
+                //inPlay = true;
             }
         }
     }
@@ -199,6 +199,11 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         transform.position = startPos;
         transform.rotation = startRot;
         updatedMaster = false;
+
+        //Initialize the piece on the board
+        GameMaster.Instance.InitializePiece(this);
+        inPlay = true;
+
         yield return null;
     }
 
