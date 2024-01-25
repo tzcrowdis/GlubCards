@@ -95,36 +95,90 @@ public class BagOfPieces : MonoBehaviour
 
     void PlaceRandomPiece()
     {
-        //pull a random piece
-        int randPiece = UnityEngine.Random.Range(0, pieces.Count);
-        string pieceName = pieces[randPiece];
-        GameObject piecePrefab = Resources.Load("Pieces/" + pieceName) as GameObject;
-
-        //remove it from pieces [commented out for testing]
-        //pieces.Remove(pieceName);
-
-        //add it to game
-        Vector3 startingPosition = new Vector3(2f, 3f, -1.5f); //randomize vars???
-        Quaternion startingRotation = Quaternion.identity;
-        /*
-        switch (pieceName)
+        if (!FullHand())
         {
-            case "Soldier":
-                startingPosition = new Vector3(2f, 0f, -1.5f); //X AND Z STILL IMPERFECT
-                startingRotation = Quaternion.Euler(0f, 180f, 0f); //180 BC SOLDIER IMPORTED INCORRECTLY
-                break;
-            default:
-                startingPosition = new Vector3(2f, 0f, -1.5f); //X AND Z STILL IMPERFECT
-                startingRotation = Quaternion.Euler(0f, 0f, 0f);
-                break;
+            //pull a random piece
+            int randPiece = UnityEngine.Random.Range(0, pieces.Count);
+            string pieceName = pieces[randPiece];
+            GameObject piecePrefab = Resources.Load("Pieces/" + pieceName) as GameObject;
+
+            //remove it from pieces [commented out for testing]
+            //pieces.Remove(pieceName);
+
+            //add it to game
+            Vector3 startingPosition = new Vector3(UnityEngine.Random.Range(1.8f, 2.2f), 3f, UnityEngine.Random.Range(-1.5f, -2f));
+            Quaternion startingRotation = Quaternion.Euler(UnityEngine.Random.Range(0f, 360f), 0f, UnityEngine.Random.Range(0f, 360f));
+
+            chosenPiece = Instantiate(piecePrefab, startingPosition, startingRotation);
+            chosenPiece.GetComponent<PieceScript>().enemyPiece = false;
         }
-        */
+        else
+        {
+            //display message that user cant pull more pieces unless they place more
+            Debug.Log("Hand is full.");
+        }
+    }
 
-        chosenPiece = Instantiate(piecePrefab, startingPosition, startingRotation);
-        chosenPiece.GetComponent<PieceScript>().enemyPiece = false;
+    bool FullHand()
+    {
+        int sum = 0;
+        for (int i = 0; i < activeSlots.GetLength(0); i++)
+        {
+            for (int j = 0; j < activeSlots.GetLength(1); j++)
+            {
+                sum += activeSlots[i, j];
+            }
+        }
 
-        //detect collision then move to open slot
-        //done in piece script
+        if (sum == activeSlots.Length)
+            return true;
+        else
+            return false;
+    }
+
+    public (float, float) GetNearestOpenSlot(float i, float j)
+    {
+        //calc distance to nearest point
+        float[,] distMatrix = new float[activeSlots.GetLength(0), activeSlots.GetLength(1)];
+        for (int x = 0; x < distMatrix.GetLength(0); x++)
+        {
+            for (int y = 0; y < distMatrix.GetLength(1); y++)
+            {
+                if (activeSlots[x, y] == 0)
+                    distMatrix[x, y] = (float)Math.Sqrt(Math.Pow(i - x, 2) + Math.Pow(j - y, 2));
+                else
+                    distMatrix[x, y] = float.MaxValue;
+            }
+        }
+
+        //find minimums index
+        float min = float.MaxValue;
+        int openI = int.MaxValue;
+        int openJ = int.MaxValue;
+        for (int x = 0; x < distMatrix.GetLength(0); x++)
+        {
+            for (int y = 0; y < distMatrix.GetLength(1); y++)
+            {
+                if (distMatrix[x, y] < min)
+                {
+                    min = distMatrix[x, y];
+                    openI = x;
+                    openJ = y;
+                }
+            }
+        }
+
+        //set slot as occupied
+        try
+        {
+            activeSlots[openI, openJ] = 1;
+        }
+        catch
+        {
+            Debug.Log("Maximum number of active pieces reached.");
+        }
+        
+        return (openI, openJ);
     }
 
     void ReadPlayerPieces()

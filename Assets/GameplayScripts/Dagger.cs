@@ -13,7 +13,8 @@ public class Dagger : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        body.constraints = RigidbodyConstraints.FreezePosition;
-        body.constraints = RigidbodyConstraints.FreezeRotation;
+        //body.constraints = RigidbodyConstraints.FreezePosition;
+        //body.constraints = RigidbodyConstraints.FreezeRotation;
+        Destroy(body);
     }
 }

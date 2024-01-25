@@ -22,6 +22,9 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
     float hoverRotation; //y
     float rotSpeed;
 
+    Rigidbody rb;
+    bool falling;
+
     Canvas infoCanvas;
     bool displayInfo;
     float infoDelay;
@@ -74,7 +77,13 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         hoverHeight = 0.25f + height;
         upSpeed = 0.01f;
         hoverRotation = 180f;
-        rotSpeed = 1f;
+        rotSpeed = 2.5f;
+
+        if (!enemyPiece)
+            falling = true;
+        rb = GetComponent<Rigidbody>();
+        if (enemyPiece)
+            Destroy(rb);
 
         inPlay = false;
 
@@ -114,7 +123,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         }
         else 
         {
-            if (!enemyPiece && (!selected || inPlay))
+            if (!falling & !enemyPiece && (!selected || inPlay))
             {
                 //put back
                 if (transform.position.y > height && transform.rotation.eulerAngles.y > 0f)
@@ -151,11 +160,11 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
                 infoCanvas.GetComponent<CanvasGroup>().alpha = 0f;
                 infoCanvas.transform.Rotate(new Vector3(0f, 180f, 0f));
 
-                //Initialize the piece on the board
-                //GameMaster.Instance.InitializePiece(this);
-                //inPlay = true;
+                //Initialize the piece on the board NOW IN MOVE TO START
             }
         }
+
+        //add right click for info box???
     }
 
     private void OnMouseExit()
@@ -188,6 +197,9 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         float t = 0;
         float endTime = 1;
 
+        //free slot
+        BagOfPieces.Instance.activeSlots[(int)currentPos.x, -(int)currentPos.z - 1] = 0;
+
         while (t < endTime)
         {
             transform.position = Vector3.Lerp(currentPos, startPos, t);
@@ -212,4 +224,49 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         GameMaster.Instance.SetPieceLocOnBoard(gameObject, oldPos, pos);
     }
 
+    void OnCollisionEnter(Collision collision) //make virtual for mirror???
+    {
+        if (falling)
+        {
+            //stop rigid body
+            Destroy(rb);
+
+            //move to open slot
+            float x, z;
+            (x, z) = BagOfPieces.Instance.GetNearestOpenSlot(transform.position.x, -(int)transform.position.z - 1);
+
+            if (x < float.MaxValue & z < float.MaxValue)
+            {
+                StartCoroutine(MoveToSlot(x, -(z + 1))); //convert z to world coord
+            }
+
+            //WAIT FOR COROUTINE???
+
+            falling = false;
+        }
+    }
+
+    IEnumerator MoveToSlot(float x, float z)
+    {
+        //move to the slot and rotate to face board
+        Vector3 currentPos = transform.position;
+        Quaternion currentRot = transform.rotation;
+        Vector3 slotPos = new Vector3(x, height, z);
+        Quaternion slotRot = Quaternion.Euler(0, 0, 0);
+        float t = 0;
+        float endTime = 1;
+        float speed = 2f;
+
+        while (t < endTime)
+        {
+            transform.position = Vector3.Lerp(currentPos, slotPos, speed * t);
+            transform.rotation = Quaternion.Lerp(currentRot, slotRot, speed * t);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = slotPos;
+        transform.rotation = slotRot;
+        yield return null;
+    }
 }
