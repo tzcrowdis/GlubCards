@@ -15,32 +15,26 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
     Player player;
     bool selected;
     bool inPlay;
+
+    bool hovering;
+    float hoverHeight; //y
+    float upSpeed;
+    float hoverRotation; //y
+    float rotSpeed;
+
     Canvas infoCanvas;
+    bool displayInfo;
+    float infoDelay;
+    float t;
+
     public Light hoverLight;
     public bool moving;
     public bool enemyPiece; //set when prefab is instantiated
     public bool updatedMaster {get; private set;}
     public float height { get; protected set; }
 
-    public virtual void Start()
-    {
-        player = GameObject.Find("Player").GetComponent<Player>();
-        selected = false;
 
-        infoCanvas = gameObject.GetComponentInChildren<Canvas>();
-        infoCanvas.enabled = false;
-
-        hoverLight = transform.GetChild(0).gameObject.GetComponent<Light>();
-        hoverLight.enabled = false;
-
-        inPlay = false;
-
-        updatedMaster = false;
-
-        moving = false;
-    }
-
-    //individual piece methods
+    //INDIVIDUAL PIECE METHODS
     public virtual IEnumerator Act(System.Action onComplete)
     {
         moving = true;
@@ -60,21 +54,102 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
     public virtual void Defend(GameObject enemyPiece) { }
 
 
-    //every piece methods
+    //COMMON PIECE METHODS
+    public virtual void Start()
+    {
+        player = GameObject.Find("Player").GetComponent<Player>();
+        selected = false;
+
+        infoCanvas = gameObject.GetComponentInChildren<Canvas>();
+        infoCanvas.transform.Rotate(new Vector3(0f, 180f, 0f));
+        infoCanvas.GetComponent<CanvasGroup>().alpha = 0f;
+        displayInfo = false;
+        infoDelay = 1.5f;
+        t = 0f;
+
+        hoverLight = transform.GetChild(0).gameObject.GetComponent<Light>();
+        hoverLight.enabled = false;
+
+        hovering = false;
+        hoverHeight = 0.25f + height;
+        upSpeed = 0.01f;
+        hoverRotation = 180f;
+        rotSpeed = 5f;
+
+        inPlay = false;
+
+        updatedMaster = false;
+
+        moving = false;
+    }
+
+    void Update()
+    {
+        if (displayInfo)
+        {
+            t += Time.deltaTime;
+            if (t > infoDelay)
+            {
+                infoCanvas.GetComponent<CanvasGroup>().alpha = 1f;
+            }
+            else if (t > infoDelay * 0.75f)
+            {
+                infoCanvas.GetComponent<CanvasGroup>().alpha += 0.025f;
+            }
+        }
+        
+        if (hovering)
+        {
+            //raise and twist
+            if (transform.position.y < hoverHeight && transform.rotation.eulerAngles.y < hoverRotation)
+            {
+                transform.position += new Vector3(0f, upSpeed, 0f);
+                transform.Rotate(new Vector3(0f, rotSpeed, 0f));
+            }
+            else
+            {
+                transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
+                transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, hoverRotation, transform.rotation.eulerAngles.z);
+            }
+        }
+        else 
+        {
+            if (!enemyPiece && (!selected || inPlay))
+            {
+                //put back
+                if (transform.position.y > height && transform.rotation.eulerAngles.y > 0f)
+                {
+                    transform.position -= new Vector3(0f, upSpeed, 0f);
+                    transform.Rotate(new Vector3(0f, -rotSpeed, 0f));
+                }
+                else
+                {
+                    transform.position = new Vector3(transform.position.x, height, transform.position.z);
+                    transform.rotation = Quaternion.identity;
+                }
+            }
+        }
+    }
+
     void OnMouseOver()
     {
-        infoCanvas.enabled = true;
+        displayInfo = true;
         
         if (player.selectingPiece && !inPlay && !enemyPiece)
         {
-            //highlight card
-            hoverLight.enabled = true;
+            //highlight piece
+            //hoverLight.enabled = true;
+            hovering = true;
 
             if (Input.GetMouseButtonDown(0))
             {
                 //tell player this was chosen
                 selected = true;
                 player.piece = gameObject.GetComponent<PieceScript>();
+
+                //display info box correctly on board
+                infoCanvas.GetComponent<CanvasGroup>().alpha = 0f;
+                infoCanvas.transform.Rotate(new Vector3(0f, 180f, 0f));
 
                 //Initialize the piece on the board
                 GameMaster.Instance.InitializePiece(this);
@@ -85,7 +160,11 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     private void OnMouseExit()
     {
-        infoCanvas.enabled = false;
+        displayInfo = false;
+        infoCanvas.GetComponent<CanvasGroup>().alpha = 0f;
+        t = 0f;
+
+        hovering = false;
         
         if (!selected && !enemyPiece)
         {

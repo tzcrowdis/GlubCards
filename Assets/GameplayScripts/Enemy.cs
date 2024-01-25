@@ -53,7 +53,8 @@ public class Enemy : MonoBehaviour
     {
         GameObject piecePrefab = Resources.Load("Pieces/" + pieceName) as GameObject;
         position.y = 0.16f; //ASSUMES THIS IS DEFAULT MODEL HEIGHT
-        GameObject pieceObj = Instantiate(piecePrefab, position, Quaternion.identity); //adjust orientation???
+        Quaternion rotation = Quaternion.Euler(0f, 180f, 0f);
+        GameObject pieceObj = Instantiate(piecePrefab, position, rotation);
         pieceObj.GetComponent<PieceScript>().enemyPiece = true;
         GameMaster.Instance.InitializePiece(pieceObj.GetComponent<PieceScript>());
 

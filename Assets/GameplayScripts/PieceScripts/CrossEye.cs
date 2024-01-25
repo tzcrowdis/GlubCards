@@ -39,41 +39,198 @@ public class CrossEye : PieceScript
         float z = transform.position.z;
 
         //determine next position
-        GameObject spaceInFront = null; ;
+        GameObject spaceInFront = null;
+        if (enemyPiece)
+        {
+            if (z == startRow) //get initial direction
+            {
+                if (x <= 2f)
+                {
+                    x++;
+                    left = true;
+                }
+                else
+                {
+                    x--;
+                    left = false;
+                }
+            }
+            else
+            {
+                if (left)
+                {
+                    if (x + 1 >= GameMaster.Instance.board.GetLength(0))
+                    {
+                        //enemy piece change to right
+                        x--;
+                        left = false;
+                    }
+                    else
+                        x++;
+                }
+                else
+                {
+                    if (x - 1 < 0)
+                    {
+                        //enemy piece change to right
+                        x++;
+                        left = true;
+                    }
+                    else
+                        x--;
+                }
+            }
+            z--;
+        }
+        else //player piece logic
+        {
+            if (z == startRow)
+            {
+                if (x <= 2f)
+                {
+                    x++;
+                    left = false;
+                }
+                else
+                {
+                    x--;
+                    left = true;
+                }
+            }
+            else
+            {
+                if (left)
+                {
+                    if (x - 1f < 0f)
+                    {
+                        //player piece change to right
+                        x++;
+                        left = false;
+                    }
+                    else //keep moving left
+                        x--;
+                }
+                else
+                {
+                    if (x + 1 >= GameMaster.Instance.board.GetLength(0)) //check right bound
+                    {
+                        //player piece change to left
+                        x--;
+                        left = true;
+                    }
+                    else //keep moving right
+                        x++;
+                }
+            }
+            z++;
+        }
+        /*
         if (z == startRow) //CAN THIS WHOLE BLOCK BE CLEANER???
         {
             if (x <= 2f)
             {
                 if (enemyPiece)
                 {
-                    x--;
+                    x++;
                     z--;
-                    left = false;
+                    left = true;
                 }
                 else
                 {
                     x++;
                     z++;
-                    left = true;
+                    left = false;
                 }               
             }
             else
             {
                 if (enemyPiece)
                 {
-                    x++;
+                    x--;
                     z--;
-                    left = true;
+                    left = false;
                 }
                 else
                 {
                     x--;
                     z++;
-                    left = false;
+                    left = true;
                 }
             }
         }
-        else if (z >= endRow)
+        else
+        {
+            if (left)
+            {
+                if (x - 1f < 0f) 
+                {
+                    if (enemyPiece) //enemy piece change to left
+                    {
+                        x++;
+                        z--;
+                        left = true;
+                    }
+                    else //player piece change to right
+                    {
+                        x++;
+                        z++;
+                        left = false;
+                    }
+                }
+                else //keep moving left
+                {
+                    if (enemyPiece)
+                    {
+                        x++;
+                        z--;
+                    }
+                    else
+                    {
+                        x--;
+                        z++;
+                    }
+                }
+            }
+            else
+            {
+                if (x + 1 >= GameMaster.Instance.board.GetLength(0)) //check right bound
+                {
+                    if (enemyPiece) //enemy piece change to right
+                    {
+                        x--;
+                        z--;
+                        left = false;
+                    }
+                    else //player piece change to left
+                    {
+                        x--;
+                        z++;
+                        left = true;
+                    }
+                }
+                else //keep moving right
+                {
+                    if (enemyPiece)
+                    {
+                        x--;
+                        z--;
+                    }
+                    else
+                    {
+                        x++;
+                        z++;
+                    }
+                }
+            }
+        }
+        */
+
+        //catch if we attacked player directly
+        try
+        {
+            spaceInFront = GameMaster.Instance.board[(int)x, (int)z];
+        }
+        catch
         {
             //attack directly
             if (enemyPiece)
@@ -86,88 +243,15 @@ public class CrossEye : PieceScript
                 Debug.Log($"{gameObject.name} is attacking Enemy Directly");
                 GameMaster.Instance.enemy.TakeDmg(gameObject);
             }
-        }
-        else //REWORK BOUNDS
-        {
-            if (left)
-            {
-                if (x - 1 < 0f) //check left bound
-                {
-                    if (enemyPiece)
-                    {
-                        x++;
-                        z--;
-                        left = true;
-                    }
-                    else
-                    {
-                        x++;
-                        z++;
-                        left = false;
-                    }
-                }
-                else
-                {
-                    if (enemyPiece)
-                    {
-                        x--;
-                        z--;
-                    }
-                    else
-                    {
-                        x++;
-                        z++;
-                    }
-                }
-            }
-            else
-            {
-                if (x + 1 < GameMaster.Instance.board.GetLength(0)) //check right bound
-                {
-                    if (enemyPiece)
-                    {
-                        x--;
-                        z--;
-                        left = false;
-                    }
-                    else
-                    {
-                        x--;
-                        z++;
-                        left = true;
-                    }
-                }
-                else
-                {
-                    if (enemyPiece)
-                    {
-                        x--;
-                        z--;
-                    }
-                    else
-                    {
-                        x++;
-                        z++;
-                    }
-                }
-            }
-        }
-        try
-        {
-            spaceInFront = GameMaster.Instance.board[(int)x, (int)z];
-        }
-        catch
-        {
             spaceInFront = null;
             x = transform.position.x;
             z = transform.position.z;
         }
 
-        //XOR enforces pieces aren't on the same side
+        //attack or wait if obstructed
         if (spaceInFront != null) 
         {
-            //attack
-            if (spaceInFront.GetComponent<PieceScript>().enemyPiece ^ enemyPiece)
+            if (spaceInFront.GetComponent<PieceScript>().enemyPiece ^ enemyPiece) //XOR enforces pieces aren't on the same side
                 Attack(spaceInFront);
 
             //dont move if attack
