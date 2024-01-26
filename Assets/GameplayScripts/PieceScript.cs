@@ -30,7 +30,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
     float infoDelay;
     float t;
 
-    public Light hoverLight;
+    //public Light hoverLight;
     public bool moving;
     public bool enemyPiece; //set when prefab is instantiated
     public bool updatedMaster {get; private set;}
@@ -47,14 +47,11 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         yield return null;
     }
 
-    public virtual IEnumerator Move(float x, float z)
-    {
-        yield return null;
-    }
+    public virtual IEnumerator Move(float x, float z) { yield return null; }
 
-    public virtual void Attack(GameObject enemyPiece) { }
+    public virtual IEnumerator Attack(GameObject enemyPiece) { yield return null; }
 
-    public virtual void Defend(GameObject enemyPiece) { }
+    public virtual IEnumerator Defend(GameObject enemyPiece) { yield return null; }
 
 
     //COMMON PIECE METHODS
@@ -70,14 +67,14 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         infoDelay = 1.5f;
         t = 0f;
 
-        hoverLight = transform.GetChild(0).gameObject.GetComponent<Light>();
-        hoverLight.enabled = false;
+        //hoverLight = transform.GetChild(0).gameObject.GetComponent<Light>();
+        //hoverLight.enabled = false;
 
         hovering = false;
         hoverHeight = 0.25f + height;
         upSpeed = 0.01f;
         hoverRotation = 180f;
-        rotSpeed = 2.5f;
+        rotSpeed = 10f;
 
         if (!enemyPiece)
             falling = true;
@@ -177,7 +174,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         
         if (!selected && !enemyPiece)
         {
-            hoverLight.enabled = false;
+            //hoverLight.enabled = false;
         }
     }
 

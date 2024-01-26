@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
                         if (startGrid[i].GetComponent<GridElemScript>().selected == true)
                         {
                             startPos = startGrid[i].transform.position;
-                            piece.hoverLight.enabled = false;
+                            //piece.hoverLight.enabled = false;
                             StartCoroutine(piece.MoveToStart(startPos));
 
                             TurnOffGridSelection();

@@ -6,11 +6,16 @@ using TMPro;
 
 public class WW1Dog : PieceScript
 {
+    Canvas atkCanvas;
+    
     public override void Start()
     {
         hp = 1f;
         dmg = 1f;
-        height = 0.16f;
+        height = 0.13f;
+
+        atkCanvas = GameObject.Find("AttackCanvas").GetComponent<Canvas>();
+        atkCanvas.enabled = false;
 
         base.Start();
     }
@@ -25,16 +30,16 @@ public class WW1Dog : PieceScript
         if (enemyPiece)
         {
             if (GameMaster.Instance.board[(int)x, (int)z - 4] != null)
-                Attack(GameMaster.Instance.board[(int)x, (int)z - 4]);
+                yield return Attack(GameMaster.Instance.board[(int)x, (int)z - 4]);
             if (GameMaster.Instance.board[(int)x, (int)z - 3] != null)
-                Attack(GameMaster.Instance.board[(int)x, (int)z - 3]);
+                yield return Attack(GameMaster.Instance.board[(int)x, (int)z - 3]);
         }
         else
         {
             if (GameMaster.Instance.board[(int)x, (int)z + 4] != null)
-                Attack(GameMaster.Instance.board[(int)x, (int)z + 4]);
+                yield return Attack(GameMaster.Instance.board[(int)x, (int)z + 4]);
             if (GameMaster.Instance.board[(int)x, (int)z + 3] != null)
-                Attack(GameMaster.Instance.board[(int)x, (int)z + 3]);
+                yield return Attack(GameMaster.Instance.board[(int)x, (int)z + 3]);
         }
 
         moving = false;
@@ -47,39 +52,29 @@ public class WW1Dog : PieceScript
         yield return null; //dog doesn't move (shell shocked)
     }
 
-    public override void Attack(GameObject enemyPiece) 
+    public override IEnumerator Attack(GameObject enemyPiece) 
     {
-        try
-        {
-            //attach text bubble to them
-            //"oh god, it's just looking at me..."
-            StartCoroutine(DisplayAttackText(enemyPiece));
-            enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
-        }
+        //attach text bubble to them
+        //"oh god, it's just looking at me..."
+        yield return DisplayAttackText(enemyPiece);
+        yield return enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
     }
 
     IEnumerator DisplayAttackText(GameObject enemyPiece)
     {
-        //load text
-        GameObject dogDeathText = Resources.Load("UI/dogDeathText") as GameObject; //MAKE PREFAB
         Vector3 position = new Vector3(enemyPiece.transform.position.x, enemyPiece.GetComponent<PieceScript>().height + 1f, enemyPiece.transform.position.z);
         Quaternion rotation = Quaternion.identity; //ROTATE TOWARDS CAMERA???
-        dogDeathText = Instantiate(dogDeathText, position, rotation);
+        atkCanvas.transform.position = position;
+        atkCanvas.transform.rotation = rotation;
 
-        //wait a second
+        atkCanvas.enabled = true;
         yield return new WaitForSeconds(2f);
-
-        //destroy
-        Destroy(dogDeathText, 0f);
+        atkCanvas.enabled = false;
 
         yield return null;
     }
 
-    public override void Defend(GameObject enemyPiece) 
+    public override IEnumerator Defend(GameObject enemyPiece) 
     {
         try
         {
@@ -94,5 +89,7 @@ public class WW1Dog : PieceScript
         {
             Debug.Log(e);
         }
+
+        yield return null;
     }
 }

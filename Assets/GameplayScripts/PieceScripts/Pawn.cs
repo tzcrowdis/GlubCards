@@ -103,22 +103,20 @@ public class Pawn : PieceScript
         yield return null;
     }
 
-    public override void Attack(GameObject enemyPiece)
+    public override IEnumerator Attack(GameObject enemyPiece)
     {
-        try
-        {
-            enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
-        }
+        yield return enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
+
+        yield return null;
     }
 
-    public override void Defend(GameObject enemyPiece)
+    public override IEnumerator Defend(GameObject enemyPiece)
     {
+        Debug.Log("called defend");
+        
         try
         {
+            Debug.Log("hello");
             hp -= enemyPiece.GetComponent<PieceScript>().dmg;
             if (hp <= 0)
             {
@@ -130,5 +128,7 @@ public class Pawn : PieceScript
         {
             Debug.Log(e);
         }
+
+        yield return null;
     }
 }

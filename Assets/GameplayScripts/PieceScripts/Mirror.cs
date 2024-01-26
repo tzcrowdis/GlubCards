@@ -38,12 +38,13 @@ public class Mirror : PieceScript
         yield return null; //mirror doesn't move
     }
 
-    public override void Attack(GameObject enemyPiece)
-    { 
+    public override IEnumerator Attack(GameObject enemyPiece)
+    {
         //mirror doesn't attack
+        yield return null;
     }
 
-    public override void Defend(GameObject enemyPiece) 
+    public override IEnumerator Defend(GameObject enemyPiece) 
     {
         try
         {
@@ -59,5 +60,7 @@ public class Mirror : PieceScript
         {
             Debug.Log(e);
         }
+
+        yield return null;
     } 
 }

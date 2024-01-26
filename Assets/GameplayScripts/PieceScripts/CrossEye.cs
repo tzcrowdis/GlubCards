@@ -124,106 +124,6 @@ public class CrossEye : PieceScript
             }
             z++;
         }
-        /*
-        if (z == startRow) //CAN THIS WHOLE BLOCK BE CLEANER???
-        {
-            if (x <= 2f)
-            {
-                if (enemyPiece)
-                {
-                    x++;
-                    z--;
-                    left = true;
-                }
-                else
-                {
-                    x++;
-                    z++;
-                    left = false;
-                }               
-            }
-            else
-            {
-                if (enemyPiece)
-                {
-                    x--;
-                    z--;
-                    left = false;
-                }
-                else
-                {
-                    x--;
-                    z++;
-                    left = true;
-                }
-            }
-        }
-        else
-        {
-            if (left)
-            {
-                if (x - 1f < 0f) 
-                {
-                    if (enemyPiece) //enemy piece change to left
-                    {
-                        x++;
-                        z--;
-                        left = true;
-                    }
-                    else //player piece change to right
-                    {
-                        x++;
-                        z++;
-                        left = false;
-                    }
-                }
-                else //keep moving left
-                {
-                    if (enemyPiece)
-                    {
-                        x++;
-                        z--;
-                    }
-                    else
-                    {
-                        x--;
-                        z++;
-                    }
-                }
-            }
-            else
-            {
-                if (x + 1 >= GameMaster.Instance.board.GetLength(0)) //check right bound
-                {
-                    if (enemyPiece) //enemy piece change to right
-                    {
-                        x--;
-                        z--;
-                        left = false;
-                    }
-                    else //player piece change to left
-                    {
-                        x--;
-                        z++;
-                        left = true;
-                    }
-                }
-                else //keep moving right
-                {
-                    if (enemyPiece)
-                    {
-                        x--;
-                        z--;
-                    }
-                    else
-                    {
-                        x++;
-                        z++;
-                    }
-                }
-            }
-        }
-        */
 
         //catch if we attacked player directly
         try
@@ -252,7 +152,7 @@ public class CrossEye : PieceScript
         if (spaceInFront != null) 
         {
             if (spaceInFront.GetComponent<PieceScript>().enemyPiece ^ enemyPiece) //XOR enforces pieces aren't on the same side
-                Attack(spaceInFront);
+                yield return Attack(spaceInFront);
 
             //dont move if attack
             x = transform.position.x;
@@ -284,19 +184,14 @@ public class CrossEye : PieceScript
         yield return null;
     }
 
-    public override void Attack(GameObject enemyPiece) 
+    public override IEnumerator Attack(GameObject enemyPiece) 
     {
-        try
-        {
-            enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
-        }
+        yield return enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
+
+        yield return null;
     }
 
-    public override void Defend(GameObject enemy) 
+    public override IEnumerator Defend(GameObject enemy) 
     {
         try
         {
@@ -311,5 +206,7 @@ public class CrossEye : PieceScript
         {
             Debug.Log(e);
         }
+
+        yield return null;
     }
 }

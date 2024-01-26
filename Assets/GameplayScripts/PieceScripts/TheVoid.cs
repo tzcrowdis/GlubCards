@@ -97,7 +97,7 @@ public class TheVoid : PieceScript
         //Attack if piece exists
         if (objOnBoard != null)
         {
-            Attack(objOnBoard);
+            yield return Attack(objOnBoard);
             yield return new WaitForSeconds(0.5f);
 
             //lower to board
@@ -127,19 +127,14 @@ public class TheVoid : PieceScript
         return t + (Time.deltaTime * moveSpeed);
     }
 
-    public override void Attack(GameObject enemyPiece)
+    public override IEnumerator Attack(GameObject enemyPiece)
     {
-        try
-        {
-            enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
-        }
+        yield return enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
+
+        yield return null;
     }
 
-    public override void Defend(GameObject enemy)
+    public override IEnumerator Defend(GameObject enemy)
     {
         try
         {
@@ -154,5 +149,7 @@ public class TheVoid : PieceScript
         {
             Debug.Log(e);
         }
+
+        yield return null;
     }
 }
