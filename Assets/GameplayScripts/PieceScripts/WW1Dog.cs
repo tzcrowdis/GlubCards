@@ -14,7 +14,8 @@ public class WW1Dog : PieceScript
         dmg = 1f;
         height = 0.13f;
 
-        atkCanvas = GameObject.Find("AttackCanvas").GetComponent<Canvas>();
+        //atkCanvas = GameObject.Find("AttackCanvas").GetComponent<Canvas>();
+        atkCanvas = transform.GetChild(1).GetComponent<Canvas>();
         atkCanvas.enabled = false;
 
         base.Start();
@@ -54,10 +55,13 @@ public class WW1Dog : PieceScript
 
     public override IEnumerator Attack(GameObject enemyPiece) 
     {
-        //attach text bubble to them
-        //"oh god, it's just looking at me..."
-        yield return DisplayAttackText(enemyPiece);
-        yield return enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
+        if (enemyPiece.GetComponent<PieceScript>().enemyPiece ^ this.enemyPiece)
+        {
+            //attach text bubble to them
+            //"oh god, it's just looking at me..."
+            yield return DisplayAttackText(enemyPiece);
+            yield return enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
+        }
     }
 
     IEnumerator DisplayAttackText(GameObject enemyPiece)
