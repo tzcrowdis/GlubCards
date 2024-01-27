@@ -35,8 +35,9 @@ public class BagOfPieces : MonoBehaviour
         grow = false;
 
         startSize = transform.localScale;
-        endSize = new Vector3(2.25f, 2.25f, 2.25f);
-        scaleChange = new Vector3(0.01f, 0.01f, 0.01f);
+        endSize = new Vector3(startSize.x * 1.15f, startSize.y * 1.15f, startSize.z * 1.15f);
+        float delta = (endSize.x - startSize.x) / 20f;
+        scaleChange = new Vector3(delta, delta, delta);
     }
 
     private void Update()

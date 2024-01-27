@@ -71,7 +71,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         //hoverLight.enabled = false;
 
         hovering = false;
-        hoverHeight = 0.25f + height;
+        hoverHeight = 0.25f;
         upSpeed = 0.01f;
         hoverRotation = 180f;
         rotSpeed = 10f;
@@ -123,14 +123,14 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
             if (!falling & !enemyPiece && (!selected || inPlay))
             {
                 //put back
-                if (transform.position.y > height && transform.rotation.eulerAngles.y > 0f)
+                if (transform.position.y > 0f && transform.rotation.eulerAngles.y > 0f)
                 {
                     transform.position -= new Vector3(0f, upSpeed, 0f);
                     transform.Rotate(new Vector3(0f, -rotSpeed, 0f));
                 }
                 else
                 {
-                    transform.position = new Vector3(transform.position.x, height, transform.position.z);
+                    transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
                     transform.rotation = Quaternion.identity;
                 }
             }
@@ -248,7 +248,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         //move to the slot and rotate to face board
         Vector3 currentPos = transform.position;
         Quaternion currentRot = transform.rotation;
-        Vector3 slotPos = new Vector3(x, height, z);
+        Vector3 slotPos = new Vector3(x, 0f, z);
         Quaternion slotRot = Quaternion.Euler(0, 0, 0);
         float t = 0;
         float endTime = 1;
