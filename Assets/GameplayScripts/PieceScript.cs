@@ -53,6 +53,11 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     public virtual IEnumerator Defend(GameObject enemyPiece) { yield return null; }
 
+    public virtual float GetStartPositionZ()
+    {
+        return 0f; //override for pieces that don't start at 0
+    }
+
 
     //COMMON PIECE METHODS
     public virtual void Start()

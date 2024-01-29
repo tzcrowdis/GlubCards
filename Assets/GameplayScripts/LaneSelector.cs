@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridElemScript : MonoBehaviour
+public class LaneSelector : MonoBehaviour
 {
     ParticleSystem hoverEffect;
     
     public bool selected;
     public bool on;
+
+    Player player;
     
     void Start()
     {
@@ -18,6 +20,8 @@ public class GridElemScript : MonoBehaviour
 
         selected = false;
         on = false;
+
+        player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     void OnMouseOver()
@@ -27,6 +31,12 @@ public class GridElemScript : MonoBehaviour
             //enable particles
             var emission = hoverEffect.emission;
             emission.enabled = true;
+
+            //get z location for emission from piece
+            if (player.piece != null)
+                hoverEffect.gameObject.transform.position = new Vector3(hoverEffect.gameObject.transform.position.x,
+                                                                            hoverEffect.gameObject.transform.position.y,
+                                                                            player.piece.GetStartPositionZ());
 
             if (Input.GetMouseButtonDown(0))
             {

@@ -51,10 +51,11 @@ public class Player : MonoBehaviour
                     //move cards to selected starting position
                     for (int i = 0; i < startGrid.Length; i++)
                     {
-                        if (startGrid[i].GetComponent<GridElemScript>().selected == true)
+                        if (startGrid[i].GetComponent<LaneSelector>().selected == true)
                         {
                             startPos = startGrid[i].transform.position;
-                            //piece.hoverLight.enabled = false;
+                            startPos.z = piece.GetStartPositionZ(); //SET STARTING POSITION BY FUNCTION IN PIECE
+
                             StartCoroutine(piece.MoveToStart(startPos));
 
                             TurnOffGridSelection();
@@ -105,7 +106,7 @@ public class Player : MonoBehaviour
     {
         for (int i = 0; i < startGrid.Length; i++)
         {
-            startGrid[i].GetComponent<GridElemScript>().on = true;
+            startGrid[i].GetComponent<LaneSelector>().on = true;
         }
     }
 
@@ -113,8 +114,8 @@ public class Player : MonoBehaviour
     {
         for (int i = 0; i < startGrid.Length; i++)
         {
-            startGrid[i].GetComponent<GridElemScript>().on = false;
-            startGrid[i].GetComponent<GridElemScript>().selected = false;
+            startGrid[i].GetComponent<LaneSelector>().on = false;
+            startGrid[i].GetComponent<LaneSelector>().selected = false;
         }
     }
 
