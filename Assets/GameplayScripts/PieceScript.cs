@@ -125,18 +125,34 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         }
         else 
         {
-            if (!falling & !enemyPiece && (!selected || inPlay))
+            if (!falling & !enemyPiece)
             {
                 //put back
-                if (transform.position.y > 0f && transform.rotation.eulerAngles.y > 0f)
+                if (inPlay) //on board
                 {
-                    transform.position -= new Vector3(0f, upSpeed, 0f);
-                    transform.Rotate(new Vector3(0f, -rotSpeed, 0f));
+                    if (transform.position.y > height && transform.rotation.eulerAngles.y > 0f)
+                    {
+                        transform.position -= new Vector3(0f, upSpeed, 0f);
+                        transform.Rotate(new Vector3(0f, -rotSpeed, 0f));
+                    }
+                    else
+                    {
+                        transform.position = new Vector3(transform.position.x, height, transform.position.z);
+                        transform.rotation = Quaternion.identity;
+                    }
                 }
-                else
+                else //on slots
                 {
-                    transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
-                    transform.rotation = Quaternion.identity;
+                    if (transform.position.y > 0f && transform.rotation.eulerAngles.y > 0f)
+                    {
+                        transform.position -= new Vector3(0f, upSpeed, 0f);
+                        transform.Rotate(new Vector3(0f, -rotSpeed, 0f));
+                    }
+                    else
+                    {
+                        transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+                        transform.rotation = Quaternion.identity;
+                    }
                 }
             }
         }
