@@ -112,11 +112,8 @@ public class Pawn : PieceScript
 
     public override IEnumerator Defend(GameObject enemyPiece)
     {
-        Debug.Log("called defend");
-        
         try
         {
-            Debug.Log("hello");
             hp -= enemyPiece.GetComponent<PieceScript>().dmg;
             if (hp <= 0)
             {
