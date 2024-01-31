@@ -75,11 +75,9 @@ public class LeechWizard : PieceScript
         //dodge first attack
         //by moving left or right if free space
         //otherwise die
-        Debug.Log(hp);
         if (dodged)
         {
             hp -= enemyPiece.GetComponent<PieceScript>().dmg;
-            Debug.Log(hp);
             if (hp <= 0)
             {
                 GameMaster.Instance.RemovePieceFromBoard(gameObject);

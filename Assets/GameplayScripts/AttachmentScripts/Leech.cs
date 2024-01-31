@@ -39,14 +39,24 @@ public class Leech : MonoBehaviour
         {
             if (suckee.GetComponent<PieceScript>().enemyPiece && suckee.transform.position.z == 0)
             {
-                GameMaster.Instance.RemovePieceFromBoard(suckee);
-                Destroy(suckee, 0f); //kill
+                StartCoroutine(Kill(suckee));
             }
             else if (!suckee.GetComponent<PieceScript>().enemyPiece && suckee.transform.position.z == GameMaster.Instance.board.GetLength(1))
             {
-                GameMaster.Instance.RemovePieceFromBoard(suckee);
-                Destroy(suckee, 0f); //kill
+                StartCoroutine(Kill(suckee));
             }  
         }
+    }
+
+    IEnumerator Kill(GameObject victim)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        //play death animation
+
+        GameMaster.Instance.RemovePieceFromBoard(victim);
+        Destroy(victim, 0f);
+
+        yield return null;
     }
 }
