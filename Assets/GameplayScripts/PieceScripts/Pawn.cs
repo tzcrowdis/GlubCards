@@ -30,24 +30,24 @@ public class Pawn : PieceScript
             //pawns logic
             //check board one space ahead
             //move or attack
-            try
+            if (z + 1 >= GameMaster.Instance.board.GetLength(1))
+            {
+                //attack enemy directly
+                Debug.Log("Attacking Enemy Directly");
+                GameMaster.Instance.enemy.TakeDmg(gameObject);
+            }
+            else
             {
                 spaceInFront = GameMaster.Instance.board[(int)x, (int)z + 1];
                 if (spaceInFront != null)
                 {
                     if (spaceInFront.GetComponent<PieceScript>().enemyPiece)
-                        Attack(spaceInFront);
+                        yield return Attack(spaceInFront);
                 }
                 else
                 {
                     z++;
                 }
-            }
-            catch
-            {
-                //attack enemy
-                Debug.Log("Attacking Enemy Directly");
-                GameMaster.Instance.enemy.TakeDmg(gameObject);
             }
         }
         else
@@ -55,24 +55,24 @@ public class Pawn : PieceScript
             //pawns logic as enemy piece
             //check board one space ahead
             //move or attack
-            try
+            if (z - 1 < 0)
+            {
+                //attack player
+                Debug.Log($"{gameObject.name} is attacking Player Directly");
+                GameMaster.Instance.player.TakeDmg(gameObject);
+            }
+            else
             {
                 spaceInFront = GameMaster.Instance.board[(int)x, (int)z - 1];
                 if (spaceInFront != null)
                 {
                     if (!spaceInFront.GetComponent<PieceScript>().enemyPiece)
-                        Attack(spaceInFront);
+                        yield return Attack(spaceInFront);
                 }
                 else
                 {
                     z--;
                 }
-            }
-            catch
-            {
-                //attack player
-                Debug.Log($"{gameObject.name} is attacking Player Directly");
-                GameMaster.Instance.player.TakeDmg(gameObject);
             }
         }
 
