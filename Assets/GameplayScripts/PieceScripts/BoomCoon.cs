@@ -8,75 +8,66 @@ using static UnityEditor.PlayerSettings;
 
 public class BoomCoon : PieceScript
 {
+    private ParticleSystem explosion;
+    private bool fired;
+
     public override void Start() 
     {
-        hp = 1f;
-        dmg = 1f;
+        hp = 2f;
+        dmg = 5f;
         height = 0.16f;
+        fired = false;
+
+        explosion = GetComponentInChildren<ParticleSystem>();
 
         base.Start();
     }
 
     public override IEnumerator Act(System.Action onComplete)
     {
+        if (enemyPiece)
+        {
+            throw new Exception("Enemy piece logic not set up for BoomCoon");
+        }
         moving = true;
 
         float x = transform.position.x;
         float z = transform.position.z;
-        GameObject spaceInFront;
+        GameObject enemy;
 
-        if (!enemyPiece)
+        //Check if tile exists in front
+        if (z + 1 < GameMaster.Instance.board.GetLength(1))
         {
-            //pawns logic
-            //check board one space ahead
-            //move or attack
-            try
+            enemy = GetFirstPieceFront();
+
+            if (!fired && enemy != null && enemy.GetComponent<PieceScript>().enemyPiece)
             {
-                spaceInFront = GameMaster.Instance.board[(int)x, (int)z + 1];
-                if (spaceInFront != null)
-                {
-                    if (spaceInFront.GetComponent<PieceScript>().enemyPiece)
-                        Attack(spaceInFront);
-                }
-                else
-                {
-                    z++;
-                }
+                fired = true;
+                yield return StartCoroutine(Attack(enemy));
             }
-            catch
+            else
             {
-                //attack enemy
-                Debug.Log("Attacking Enemy Directly");
-                GameMaster.Instance.enemy.TakeDmg(gameObject);
+                z++;
+                yield return Move(x, z);
             }
         }
         else
         {
-            //pawns logic as enemy piece
-            //check board one space ahead
-            //move or attack
-            try
+            if (!fired)
             {
-                spaceInFront = GameMaster.Instance.board[(int)x, (int)z - 1];
-                if (spaceInFront != null)
-                {
-                    if (!spaceInFront.GetComponent<PieceScript>().enemyPiece)
-                        Attack(spaceInFront);
-                }
-                else
-                {
-                    z--;
-                }
+                PlayExplosion();
+                fired = true;
+                //attack enemy
+                Debug.Log("Attacking Enemy Directly");
+                GameMaster.Instance.enemy.TakeDmg(gameObject);
             }
-            catch
+            else
             {
-                //attack player
-                Debug.Log($"{gameObject.name} is attacking Player Directly");
-                GameMaster.Instance.player.TakeDmg(gameObject);
-            }
+                GameMaster.Instance.RemovePieceFromBoard(gameObject);
+                Destroy(gameObject, 0f);
+                onComplete = null;
+            }            
         }
-
-        yield return Move(x, z);
 
         moving = false;
         onComplete?.Invoke();
@@ -105,6 +96,7 @@ public class BoomCoon : PieceScript
 
     public override IEnumerator Attack(GameObject enemyPiece)
     {
+        PlayExplosion(enemyPiece.transform.position);        
         yield return enemyPiece.GetComponent<PieceScript>().Defend(gameObject);
 
         yield return null;
@@ -127,5 +119,35 @@ public class BoomCoon : PieceScript
         }
 
         yield return null;
+    }
+
+    //returns the first piece in front or null
+    GameObject GetFirstPieceFront()
+    {
+        GameObject[,] board = GameMaster.Instance.board;
+        for (int i = (int)transform.position.z + 1; i < board.GetLength(1); i++)
+        {
+            if (board[(int)transform.position.x, i] != null)
+                return board[(int)transform.position.x, i];
+
+        }
+        return null;
+    }
+    void PlayExplosion(Vector3 enemy)
+    {
+        Vector3 newPos = new(enemy.x,
+                            explosion.transform.position.y,
+                            enemy.z);
+        explosion.transform.position = newPos;
+        explosion.Play();
+            
+    }
+    void PlayExplosion()
+    {
+        Vector3 newpos = new(explosion.transform.position.x,
+                                explosion.transform.position.y,
+                                GameMaster.Instance.board.GetLength(1) + 1);
+        explosion.transform.position = newpos;
+        explosion.Play();
     }
 }
