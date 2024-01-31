@@ -6,7 +6,14 @@ using UnityEngine;
 public class Leech : MonoBehaviour
 {
     GameObject suckee;
-    
+
+    ParticleSystem blood;
+
+    private void Start()
+    {
+        blood = GetComponentInChildren<ParticleSystem>();
+    }
+
     //attached to piece by wizard leech
     //kills that piece once they reach their opponent
     public void Attach(GameObject piece)
@@ -31,6 +38,9 @@ public class Leech : MonoBehaviour
                 Debug.Log("void found");
                 break;
         }
+
+        //add blood spurt
+        StartCoroutine(BloodSpurt());
     }
 
     void Update()
@@ -56,6 +66,16 @@ public class Leech : MonoBehaviour
 
         GameMaster.Instance.RemovePieceFromBoard(victim);
         Destroy(victim, 0f);
+
+        yield return null;
+    }
+
+    IEnumerator BloodSpurt()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        //Destroy(blood);
+        blood.Stop(false, ParticleSystemStopBehavior.StopEmitting);
 
         yield return null;
     }
