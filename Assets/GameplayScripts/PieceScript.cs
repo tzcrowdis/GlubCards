@@ -96,6 +96,10 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     void Update()
     {
+        //Wait until piece is not moving
+        if (moving)
+            return;
+
         if (displayInfo)
         {
             t += Time.deltaTime;

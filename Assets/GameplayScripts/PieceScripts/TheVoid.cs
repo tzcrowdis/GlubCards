@@ -8,6 +8,7 @@ using static UnityEditor.PlayerSettings;
 
 public class TheVoid : PieceScript
 {
+    private const float attackHeight = 1.1f;
     MeshRenderer mesh;
     readonly float moveSpeed = 2f;
     public override void Start() 
@@ -15,25 +16,29 @@ public class TheVoid : PieceScript
         //set any unique variables here
         hp = 1f;
         dmg = 4f;
-        height = 0.5f;
+        height = 0.2f;
 
-        mesh = GetComponent<MeshRenderer>();
+        mesh = GetComponentInChildren<MeshRenderer>();
 
         //Use base to call parent functions so generics get assigned
         base.Start();
     }
 
-    //Not currently compatible as an enemy piece
+    
     public override IEnumerator Act(System.Action onComplete) 
     {
+        //Not currently compatible as an enemy piece
+        if (enemyPiece)
+            throw new Exception("TheVoid does not support enemy pieces");
+
         moving = true;
 
         GameObject[,] board = GameMaster.Instance.board;
 
         //Get random position on board
         //TODO, avoid spaces with friendly pieces
-        int rngX = UnityEngine.Random.Range(0, board.GetLength(0));
-        int rngZ = UnityEngine.Random.Range(0, board.GetLength(1));
+        int rngX = UnityEngine.Random.Range(0, board.GetLength(0) - 1);
+        int rngZ = UnityEngine.Random.Range(0, board.GetLength(1) - 1);
         int destX = (int)Math.Round(transform.position.x);
         int destZ = (int)Math.Round(transform.position.y);
         bool found = false;
@@ -45,8 +50,8 @@ public class TheVoid : PieceScript
             {
                 if (board[i, j] == null || board[i, j].GetComponent<PieceScript>().enemyPiece)
                 {
-                    destX = i + 1;
-                    destZ = j + 1;
+                    destX = i;
+                    destZ = j;
                 }
                 if (destX != -1 && j >= rngZ && i >= rngX)
                 {
@@ -75,16 +80,16 @@ public class TheVoid : PieceScript
         t = 0;
 
         //Check if a piece is on the board
-        GameObject objOnBoard = GameMaster.Instance.board[destX - 1, destZ - 1];
+        GameObject objOnBoard = GameMaster.Instance.board[destX, destZ];
         if (objOnBoard == this)
             objOnBoard = null;
 
         if (objOnBoard != null)
         {
-            transform.position = new Vector3(destX, 2f, destZ);
+            transform.position = new Vector3(destX, attackHeight, destZ);
         }
         else
-            transform.position = new Vector3(destX, 0.5f, destZ);
+            transform.position = new Vector3(destX, height, destZ);
 
         while (t < 1)
         {
@@ -97,13 +102,13 @@ public class TheVoid : PieceScript
         //Attack if piece exists
         if (objOnBoard != null)
         {
-            yield return Attack(objOnBoard);
+            yield return StartCoroutine(Attack(objOnBoard));
             yield return new WaitForSeconds(0.5f);
 
             //lower to board
             t = 0;
             Vector3 start = transform.position;
-            Vector3 end = transform.position - new Vector3(0f, 2f - height, 0f);
+            Vector3 end = new(transform.position.x, height, transform.position.z);
             while (t < 1)
             {
                 transform.position = Vector3.Lerp(start, end, t);
