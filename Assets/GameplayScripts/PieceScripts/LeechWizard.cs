@@ -13,7 +13,7 @@ public class LeechWizard : PieceScript
         dmg = 1f;
         height = 0.16f;
 
-        dodged = true;
+        dodged = false;
         focusing = false;
 
         base.Start();
@@ -23,12 +23,9 @@ public class LeechWizard : PieceScript
     {
         moving = true;
 
-        //places leech on strongest enemy opponent
+        //places leech on most hp enemy opponent
 
-        //BRAIN LEECH CONFLICT?
-        //brain leech goes after most damage?
-
-        //determine strongest enemy opponent
+        //determine juiciest enemy opponent
         PieceScript juiciestEnemy = null;
         if (!focusing)
         {
@@ -93,6 +90,8 @@ public class LeechWizard : PieceScript
                 GameMaster.Instance.SetPieceLocOnBoard(gameObject, transform.position, newPos);
                 transform.position = newPos;
                 dodged = true;
+
+                //PLAY PARTICLE EFFECT
             }
             else if (GameMaster.Instance.board[(int)transform.position.x + 1, (int)transform.position.z] == null)
             {
@@ -101,10 +100,10 @@ public class LeechWizard : PieceScript
                 GameMaster.Instance.SetPieceLocOnBoard(gameObject, transform.position, newPos);
                 transform.position = newPos;
                 dodged = true;
+
+                //PLAY PARTICLE EFFECT
             }
         }
-
-        //PLAY PARTICLE EFFECT
 
         yield return null;
     }
