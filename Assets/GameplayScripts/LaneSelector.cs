@@ -7,8 +7,6 @@ using UnityEngine.UIElements;
 
 public class LaneSelector : MonoBehaviour
 {
-    ParticleSystem hoverEffect;
-
     GameObject holo;
     
     public bool selected;
@@ -19,12 +17,6 @@ public class LaneSelector : MonoBehaviour
     
     void Start()
     {
-        //get particle system
-        hoverEffect = transform.GetChild(0).gameObject.GetComponent<ParticleSystem>();
-
-        var emission = hoverEffect.emission;
-        emission.enabled = false;
-
         selected = false;
         on = false;
 
@@ -35,17 +27,6 @@ public class LaneSelector : MonoBehaviour
     {
         if (on)
         {
-
-            //enable particles
-            var emission = hoverEffect.emission;
-            emission.enabled = true;
-
-            //get z location for emission from piece
-            if (player.piece != null)
-                hoverEffect.gameObject.transform.position = new Vector3(hoverEffect.gameObject.transform.position.x,
-                                                                            hoverEffect.gameObject.transform.position.y,
-                                                                            player.piece.GetStartPositionZ());
-
             if (holo == null)
                 CreateHoverObj();
 
@@ -60,13 +41,9 @@ public class LaneSelector : MonoBehaviour
 
     void OnMouseExit()
     {
-        //disable particles
-        var emission = hoverEffect.emission;
-        emission.enabled = false;
-
         //Coroutine will wait until piece isn't moving to destroy
-        if (holo != null)
-            Destroy(holo);
+        //if (holo != null)
+        Destroy(holo);
     }
 
     //Kinda innefficient, creates a new object every hover but works
@@ -74,13 +51,13 @@ public class LaneSelector : MonoBehaviour
     {
         //Create object
         Debug.Log("No hover object exists, creating...");
-        holo = new GameObject("holo");
+        //holo = new GameObject("holo");
 
         if (player.piece != null)
         {
             GameObject piece = player.piece.gameObject;
             //Create a ghost piece above the tile
-            Vector3 spawnPosition = transform.position + new Vector3(0, 0.5f, player.piece.GetStartPositionZ() - 2f);
+            Vector3 spawnPosition = transform.position + new Vector3(0, player.piece.height + 0.1f, player.piece.GetStartPositionZ() - 2f);
             holo = Instantiate(piece, spawnPosition, Quaternion.identity);
 
             //Remove scripting component
@@ -96,7 +73,8 @@ public class LaneSelector : MonoBehaviour
                 Material[] newMaterials = new Material[renderer.materials.Length];
                 for (int i = 0; i < newMaterials.Length; i++)
                 {
-                    Color color = renderer.materials[i].color;
+                    //Color color = renderer.materials[i].color;
+                    Color color = Color.white;
                     color.a = 0.5f;
                     renderer.materials[i].CopyPropertiesFromMaterial(transparentMat);
                     renderer.materials[i].SetColor("_Color", color);
