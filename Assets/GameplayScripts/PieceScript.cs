@@ -53,6 +53,25 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
 
     public virtual IEnumerator Defend(GameObject enemyPiece) { yield return null; }
 
+    public virtual IEnumerator DeathAnim()
+    {
+        //scale to 0
+        Vector3 startSize = transform.localScale;
+        Vector3 endSize = new Vector3(0f, 0f, 0f);
+        float t = 0;
+        float endTime = 1;
+        float speed = 2f;
+
+        while (t < endTime)
+        {
+            transform.localScale = Vector3.Lerp(startSize, endSize, speed * t);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        yield return null;
+    }
+
     public virtual float GetStartPositionZ()
     {
         return 0f; //override for pieces that don't start at 0

@@ -141,18 +141,13 @@ public class TheVoid : PieceScript
 
     public override IEnumerator Defend(GameObject enemy)
     {
-        try
+        hp -= enemy.GetComponent<PieceScript>().dmg;
+        if (hp <= 0)
         {
-            hp -= enemy.GetComponent<PieceScript>().dmg;
-            if (hp <= 0)
-            {
-                GameMaster.Instance.RemovePieceFromBoard(gameObject);
-                Destroy(gameObject, 0f); //ADJUST 0f TO TIME OF DEATH ANIM
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
+            yield return DeathAnim();
+
+            GameMaster.Instance.RemovePieceFromBoard(gameObject);
+            Destroy(gameObject, 0f); //ADJUST 0f TO TIME OF DEATH ANIM
         }
 
         yield return null;

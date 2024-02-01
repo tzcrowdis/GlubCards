@@ -81,8 +81,10 @@ public class BrainLeechWizard : PieceScript
             hp -= enemyPiece.GetComponent<PieceScript>().dmg;
             if (hp <= 0)
             {
+                yield return DeathAnim();
+
                 GameMaster.Instance.RemovePieceFromBoard(gameObject);
-                Destroy(gameObject, 0f); //ADJUST 0f TO TIME OF DEATH ANIM
+                Destroy(gameObject, 0f);
             }
         }
         else

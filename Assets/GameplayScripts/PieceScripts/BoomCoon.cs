@@ -104,18 +104,13 @@ public class BoomCoon : PieceScript
 
     public override IEnumerator Defend(GameObject enemyPiece)
     {
-        try
+        hp -= enemyPiece.GetComponent<PieceScript>().dmg;
+        if (hp <= 0)
         {
-            hp -= enemyPiece.GetComponent<PieceScript>().dmg;
-            if (hp <= 0)
-            {
-                GameMaster.Instance.RemovePieceFromBoard(gameObject);
-                Destroy(gameObject, 0f); //ADJUST 0f TO TIME OF DEATH ANIM
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
+            yield return DeathAnim();
+
+            GameMaster.Instance.RemovePieceFromBoard(gameObject);
+            Destroy(gameObject, 0f);
         }
 
         yield return null;
