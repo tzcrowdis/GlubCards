@@ -15,20 +15,17 @@ public class BrainLeech : MonoBehaviour
 
     //attached to piece by brain leech wizard
     //kills that piece once they reach their opponent
-    public void Attach(GameObject piece)
+    public IEnumerator Attach(GameObject piece)
     {
         suckee = piece;
 
-        //change suckee's allegiance (flip 180 and set enemyPiece = !enemyPiece)
-        suckee.GetComponent<PieceScript>().enemyPiece = !suckee.GetComponent<PieceScript>().enemyPiece;
-        //suckee.transform.Rotate(0f, 180f, 0f);
-
+        //attach leech
         switch (piece.name.Remove(piece.name.Length - 7))
         {
             case "Soldier":
                 transform.parent = piece.transform;
-                transform.localPosition = new Vector3(0.6f, 1.3f, -0.12f);
-                transform.localRotation = Quaternion.Euler(-90, -90, 0);
+                transform.localPosition = new Vector3(-0.308f, 2.77f, -0.237f);
+                transform.localRotation = Quaternion.Euler(-53, 90, 0); //should be -90 but getting flipped by 180 somewhere
                 break;
             case "WW1Dog":
                 Debug.Log("dog found");
@@ -41,8 +38,14 @@ public class BrainLeech : MonoBehaviour
                 break;
         }
 
+        //change suckee's allegiance
+        piece.GetComponent<PieceScript>().inPlay = true;
+        suckee.GetComponent<PieceScript>().enemyPiece = !suckee.GetComponent<PieceScript>().enemyPiece;
+
         //add blood spurt
-        StartCoroutine(BloodSpurt());
+        yield return BloodSpurt();
+
+        yield return null;
     }
 
     void Update()
@@ -53,7 +56,7 @@ public class BrainLeech : MonoBehaviour
             {
                 StartCoroutine(Kill(suckee));
             }
-            else if (!suckee.GetComponent<PieceScript>().enemyPiece && suckee.transform.position.z == GameMaster.Instance.board.GetLength(1))
+            else if (!suckee.GetComponent<PieceScript>().enemyPiece && suckee.transform.position.z == GameMaster.Instance.board.GetLength(1) - 1)
             {
                 StartCoroutine(Kill(suckee));
             }

@@ -14,7 +14,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
     //management variables
     Player player;
     bool selected;
-    bool inPlay;
+    public bool inPlay;
 
     bool hovering;
     float hoverHeight; //y
@@ -246,7 +246,7 @@ public abstract class PieceScript : MonoBehaviour //handles administrative gener
         GameMaster.Instance.SetPieceLocOnBoard(gameObject, oldPos, pos);
     }
 
-    void OnCollisionEnter(Collision collision) //make virtual for mirror???
+    void OnCollisionEnter(Collision collision)
     {
         if (falling)
         {

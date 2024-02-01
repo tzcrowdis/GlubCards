@@ -6,7 +6,9 @@ public class LeechWizard : PieceScript
 {
     bool dodged;
     bool focusing;
-    
+
+    ParticleSystem dodgeSmoke;
+
     public override void Start()
     {
         hp = 1f;
@@ -15,6 +17,8 @@ public class LeechWizard : PieceScript
 
         dodged = false;
         focusing = false;
+
+        dodgeSmoke = GetComponentInChildren<ParticleSystem>();
 
         base.Start();
     }
@@ -54,7 +58,7 @@ public class LeechWizard : PieceScript
         {
             GameObject leechPrefab = Resources.Load("Attachments/Leech") as GameObject;
             leechPrefab = Instantiate(leechPrefab, new Vector3(0f, -1f, 0f), Quaternion.identity);
-            leechPrefab.GetComponent<Leech>().Attach(juiciestEnemy.gameObject);
+            yield return leechPrefab.GetComponent<Leech>().Attach(juiciestEnemy.gameObject);
             focusing = true;
         }
 
@@ -92,6 +96,10 @@ public class LeechWizard : PieceScript
                 dodged = true;
 
                 //PLAY PARTICLE EFFECT
+                dodgeSmoke.transform.position = new Vector3(newPos.x + 1, transform.position.y, transform.position.z);
+                dodgeSmoke.Play();
+                yield return new WaitForSeconds(0.5f);
+                dodgeSmoke.Stop();
             }
             else if (GameMaster.Instance.board[(int)transform.position.x + 1, (int)transform.position.z] == null)
             {
@@ -102,6 +110,10 @@ public class LeechWizard : PieceScript
                 dodged = true;
 
                 //PLAY PARTICLE EFFECT
+                dodgeSmoke.transform.position = new Vector3(newPos.x - 1, transform.position.y, transform.position.z);
+                dodgeSmoke.Play();
+                yield return new WaitForSeconds(0.5f);
+                dodgeSmoke.Stop();
             }
         }
 

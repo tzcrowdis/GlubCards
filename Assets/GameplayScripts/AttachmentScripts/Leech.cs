@@ -16,7 +16,7 @@ public class Leech : MonoBehaviour
 
     //attached to piece by wizard leech
     //kills that piece once they reach their opponent
-    public void Attach(GameObject piece)
+    public IEnumerator Attach(GameObject piece)
     {
         suckee = piece;
         
@@ -40,7 +40,7 @@ public class Leech : MonoBehaviour
         }
 
         //add blood spurt
-        StartCoroutine(BloodSpurt());
+        yield return BloodSpurt();
     }
 
     void Update()
@@ -51,7 +51,7 @@ public class Leech : MonoBehaviour
             {
                 StartCoroutine(Kill(suckee));
             }
-            else if (!suckee.GetComponent<PieceScript>().enemyPiece && suckee.transform.position.z == GameMaster.Instance.board.GetLength(1))
+            else if (!suckee.GetComponent<PieceScript>().enemyPiece && suckee.transform.position.z == GameMaster.Instance.board.GetLength(1) - 1)
             {
                 StartCoroutine(Kill(suckee));
             }  
