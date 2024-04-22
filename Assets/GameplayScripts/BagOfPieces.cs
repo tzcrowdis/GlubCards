@@ -104,7 +104,7 @@ public class BagOfPieces : MonoBehaviour
             GameObject piecePrefab = Resources.Load("Pieces/" + pieceName) as GameObject;
 
             //remove it from pieces [commented out for testing]
-            //pieces.Remove(pieceName);
+            pieces.Remove(pieceName);
 
             //add it to game
             Vector3 startingPosition = new Vector3(UnityEngine.Random.Range(1.8f, 2.2f), 3f, UnityEngine.Random.Range(-1.5f, -2f));
